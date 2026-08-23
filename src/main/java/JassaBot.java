@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -23,8 +24,7 @@ public class JassaBot {
         System.out.println("What can I do for you?");
         System.out.println(divider);
 
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -38,36 +38,49 @@ public class JassaBot {
                 break;
             } else if (command.equals("list")) {
                 System.out.println("Here are the tasks in your list:");
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + "." + tasks[i]);
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println((i + 1) + "." + tasks.get(i));
                 }
                 System.out.println(divider);
             } else if (command.startsWith("mark ")) {
                 String number = command.substring(5);
-                int index = getTaskIndex(number, taskCount);
+                int index = getTaskIndex(number, tasks.size());
                 if (index == -1) {
                     System.out.println("Please enter a valid task number.");
                     System.out.println(divider);
                 } else {
-                    tasks[index].markAsDone();
+                    tasks.get(index).markAsDone();
                     System.out.println("Nice! I've marked this task as done:");
-                    System.out.println("  " + tasks[index]);
+                    System.out.println("  " + tasks.get(index));
                     System.out.println(divider);
                 }
 
             } else if (command.startsWith("unmark ")) {
                 String number = command.substring(7);
-                int index = getTaskIndex(number, taskCount);
+                int index = getTaskIndex(number, tasks.size());
                 if (index == -1) {
                     System.out.println("Please enter a valid task number.");
                     System.out.println(divider);
                 } else {
-                    tasks[index].markAsUndone();
+                    tasks.get(index).markAsUndone();
                     System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println("  " + tasks[index]);
+                    System.out.println("  " + tasks.get(index));
                     System.out.println(divider);
                 }
 
+            } else if (command.startsWith("delete ")) {
+                String number = command.substring(7);
+                int index = getTaskIndex(number, tasks.size());
+                if (index == -1) {
+                    System.out.println("Please enter a valid task number.");
+                    System.out.println(divider);
+                } else {
+                    Task removedTask = tasks.remove(index);
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println("  " + removedTask);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                    System.out.println(divider);
+                }
             } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                 int byIndex = command.indexOf(" /by ");
                 String description = byIndex == -1 ? command.substring(8).trim()
@@ -82,12 +95,11 @@ public class JassaBot {
                 String byTime = command.substring(byIndex + 5).trim();
 
                 Deadline newDeadline = new Deadline(description, byTime);
-                tasks[taskCount] = newDeadline;
-                taskCount++;
+                tasks.add(newDeadline);
 
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + newDeadline);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println(divider);
 
             } else if (command.equals("event") || command.startsWith("event ")) {
@@ -105,12 +117,11 @@ public class JassaBot {
                 String from = command.substring(fromIndex + 7, toIndex).trim();
                 String to = command.substring(toIndex + 5).trim();
                 Event newEvent = new Event(description, from, to);
-                tasks[taskCount] = newEvent;
-                taskCount++;
+                tasks.add(newEvent);
 
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + newEvent);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println(divider);
 
             } else if (command.equals("todo") || command.startsWith("todo ")) {
@@ -119,15 +130,14 @@ public class JassaBot {
                     throw new JassaBotException("The description of a todo cannot be empty.");
                 }
                 Todo newTodo = new Todo(description);
-                tasks[taskCount] = newTodo;
-                taskCount++;
+                tasks.add(newTodo);
 
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + newTodo);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println(divider);
             } else {
-                throw new JassaBotException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.");
+                throw new JassaBotException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, delete, or bye.");
             }
             } catch (JassaBotException e) {
                 System.out.println("OOPS!!! " + e.getMessage());
@@ -140,13 +150,13 @@ public class JassaBot {
      * Converts a user-entered, one-based task number into a valid array index.
      *
      * @param number the task number entered by the user
-     * @param taskCount the number of tasks currently stored
+     * @param numberOfTasks the number of tasks currently stored
      * @return the zero-based task index, or {@code -1} if the number is invalid
      */
-    private static int getTaskIndex(String number, int taskCount) {
+    private static int getTaskIndex(String number, int numberOfTasks) {
         try {
             int taskNumber = Integer.parseInt(number);
-            if (taskNumber < 1 || taskNumber > taskCount) {
+            if (taskNumber < 1 || taskNumber > numberOfTasks) {
                 return -1;
             }
             return taskNumber - 1;

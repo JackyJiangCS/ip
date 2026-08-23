@@ -432,7 +432,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.
+   OOPS!!! I don't recognise that command. Try todo, deadline, event, list, mark, unmark, delete, or bye.
    ____________________________________________________________
    ```
 
@@ -454,6 +454,154 @@ Each case below is one fresh console session. After sending an input, compare th
    ```
 
 10. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+### TC-07 - Delete a task
+
+**Aim:** Verify that deleting a task removes it from the `ArrayList`, reports the removed task and new count, renumbers later tasks, and rejects an invalid task number without changing the list.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   todo read book
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] read book
+   Now you have 1 tasks in the list.
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   deadline return book /by Sunday
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [D][ ] return book (by: Sunday)
+   Now you have 2 tasks in the list.
+   ____________________________________________________________
+   ```
+
+3. Input:
+
+   ```text
+   event project meeting /from Aug 6th 2pm /to 4pm
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+   Now you have 3 tasks in the list.
+   ____________________________________________________________
+   ```
+
+4. Input:
+
+   ```text
+   todo exercise
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] exercise
+   Now you have 4 tasks in the list.
+   ____________________________________________________________
+   ```
+
+5. Input:
+
+   ```text
+   todo sleep
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] sleep
+   Now you have 5 tasks in the list.
+   ____________________________________________________________
+   ```
+
+6. Input:
+
+   ```text
+   delete 3
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Noted. I've removed this task:
+     [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+   Now you have 4 tasks in the list.
+   ____________________________________________________________
+   ```
+
+7. Input:
+
+   ```text
+   delete 9
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Please enter a valid task number.
+   ____________________________________________________________
+   ```
+
+8. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the tasks in your list:
+   1.[T][ ] read book
+   2.[D][ ] return book (by: Sunday)
+   3.[T][ ] exercise
+   4.[T][ ] sleep
+   ____________________________________________________________
+   ```
+
+9. Input:
 
    ```text
    bye
