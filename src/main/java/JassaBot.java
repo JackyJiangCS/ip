@@ -5,7 +5,7 @@ import java.util.Scanner;
  */
 public class JassaBot {
     /**
-     * Runs the chatbot, echoing non-exit commands until the user enters {@code bye}.
+     * Runs the chatbot, storing entered tasks, listing them on request, and exiting when the user enters {@code bye}.
      *
      * @param args command-line arguments, which are not used
      */
@@ -23,6 +23,9 @@ public class JassaBot {
         System.out.println("What can I do for you?");
         System.out.println(divider);
 
+        String[] tasks = new String[100];
+        int taskCount = 0;
+
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String command = scanner.nextLine();
@@ -32,10 +35,17 @@ public class JassaBot {
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println(divider);
                 break;
+            } else if (command.equals("list")) {
+                for (int i = 0; i < taskCount; i++) {
+                    System.out.println((i + 1) + ". " + tasks[i]);
+                }
+                System.out.println(divider);
+            } else {
+                tasks[taskCount] = command;
+                System.out.println("added: " + command);
+                System.out.println(divider);
+                taskCount++;
             }
-
-            System.out.println(" " + command);
-            System.out.println(divider);
         }
     }
 }
