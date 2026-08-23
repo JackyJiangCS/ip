@@ -31,7 +31,8 @@ public class JassaBot {
             String command = scanner.nextLine();
             System.out.println(divider);
 
-            if (command.equals("bye")) {
+            try {
+                if (command.equals("bye")) {
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println(divider);
                 break;
@@ -67,50 +68,56 @@ public class JassaBot {
                     System.out.println(divider);
                 }
 
-            } else if (command.startsWith("deadline ")) {
+            } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                 int byIndex = command.indexOf(" /by ");
+                String description = byIndex == -1 ? command.substring(8).trim()
+                        : command.substring(8, byIndex).trim();
 
-                if(byIndex == -1) {
-                    System.out.println("Oops! Please use '/by' to specify the deadline.");
-                    System.out.println(divider);
-                } else {
-                    //get description and time from command text
-                    String description = command.substring(9, byIndex).trim();
-                    String byTime = command.substring(byIndex + 5).trim();
-
-                    Deadline newDeadline = new Deadline(description, byTime);
-                    tasks[taskCount] = newDeadline;
-                    taskCount++;
-
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  " + newDeadline);
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
-                    System.out.println(divider);
+                if (description.isEmpty()) {
+                    throw new JassaBotException("The description of a deadline cannot be empty.");
                 }
+                if (byIndex == -1) {
+                    throw new JassaBotException("A deadline needs '/by' followed by its due time.");
+                }
+                String byTime = command.substring(byIndex + 5).trim();
 
-            } else if (command.startsWith("event ")) {
+                Deadline newDeadline = new Deadline(description, byTime);
+                tasks[taskCount] = newDeadline;
+                taskCount++;
+
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + newDeadline);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println(divider);
+
+            } else if (command.equals("event") || command.startsWith("event ")) {
                 int fromIndex = command.indexOf(" /from ");
                 int toIndex = command.indexOf(" /to ");
+                String description = fromIndex == -1 ? command.substring(5).trim()
+                        : command.substring(5, fromIndex).trim();
 
-                if (fromIndex == -1 || toIndex == -1 || toIndex <= fromIndex) {
-                    System.out.println("Oops! Please use '/from' and '/to' to specify the event.");
-                    System.out.println(divider);
-                } else {
-                    String description = command.substring(6, fromIndex).trim();
-                    String from = command.substring(fromIndex + 7, toIndex).trim();
-                    String to = command.substring(toIndex + 5).trim();
-                    Event newEvent = new Event(description, from, to);
-                    tasks[taskCount] = newEvent;
-                    taskCount++;
-
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  " + newEvent);
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
-                    System.out.println(divider);
+                if (description.isEmpty()) {
+                    throw new JassaBotException("The description of an event cannot be empty.");
                 }
+                if (fromIndex == -1 || toIndex == -1 || toIndex <= fromIndex) {
+                    throw new JassaBotException("An event needs both '/from' and '/to' time markers.");
+                }
+                String from = command.substring(fromIndex + 7, toIndex).trim();
+                String to = command.substring(toIndex + 5).trim();
+                Event newEvent = new Event(description, from, to);
+                tasks[taskCount] = newEvent;
+                taskCount++;
 
-            } else {
-                String description = command.startsWith("todo ") ? command.substring(5).trim() : command;
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + newEvent);
+                System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println(divider);
+
+            } else if (command.equals("todo") || command.startsWith("todo ")) {
+                String description = command.substring(4).trim();
+                if (description.isEmpty()) {
+                    throw new JassaBotException("The description of a todo cannot be empty.");
+                }
                 Todo newTodo = new Todo(description);
                 tasks[taskCount] = newTodo;
                 taskCount++;
@@ -118,6 +125,12 @@ public class JassaBot {
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + newTodo);
                 System.out.println("Now you have " + taskCount + " tasks in the list.");
+                System.out.println(divider);
+            } else {
+                throw new JassaBotException("I don't recognise that command. Try todo, deadline, event, list, mark, unmark, or bye.");
+            }
+            } catch (JassaBotException e) {
+                System.out.println("OOPS!!! " + e.getMessage());
                 System.out.println(divider);
             }
         }
