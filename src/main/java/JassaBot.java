@@ -32,17 +32,18 @@ public class JassaBot {
             System.out.println(divider);
 
             try {
-                if (command.equals("bye")) {
+                CommandType commandType = Parser.parseCommandType(command);
+                if (commandType == CommandType.BYE) {
                 System.out.println("Bye. Hope to see you again soon!");
                 System.out.println(divider);
                 break;
-            } else if (command.equals("list")) {
+            } else if (commandType == CommandType.LIST) {
                 System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < tasks.size(); i++) {
                     System.out.println((i + 1) + "." + tasks.get(i));
                 }
                 System.out.println(divider);
-            } else if (command.startsWith("mark ")) {
+            } else if (commandType == CommandType.MARK) {
                 String number = command.substring(5);
                 int index = getTaskIndex(number, tasks.size());
                 if (index == -1) {
@@ -55,7 +56,7 @@ public class JassaBot {
                     System.out.println(divider);
                 }
 
-            } else if (command.startsWith("unmark ")) {
+            } else if (commandType == CommandType.UNMARK) {
                 String number = command.substring(7);
                 int index = getTaskIndex(number, tasks.size());
                 if (index == -1) {
@@ -68,7 +69,7 @@ public class JassaBot {
                     System.out.println(divider);
                 }
 
-            } else if (command.startsWith("delete ")) {
+            } else if (commandType == CommandType.DELETE) {
                 String number = command.substring(7);
                 int index = getTaskIndex(number, tasks.size());
                 if (index == -1) {
@@ -81,7 +82,7 @@ public class JassaBot {
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println(divider);
                 }
-            } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+            } else if (commandType == CommandType.DEADLINE) {
                 int byIndex = command.indexOf(" /by ");
                 String description = byIndex == -1 ? command.substring(8).trim()
                         : command.substring(8, byIndex).trim();
@@ -102,7 +103,7 @@ public class JassaBot {
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println(divider);
 
-            } else if (command.equals("event") || command.startsWith("event ")) {
+            } else if (commandType == CommandType.EVENT) {
                 int fromIndex = command.indexOf(" /from ");
                 int toIndex = command.indexOf(" /to ");
                 String description = fromIndex == -1 ? command.substring(5).trim()
@@ -124,7 +125,7 @@ public class JassaBot {
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println(divider);
 
-            } else if (command.equals("todo") || command.startsWith("todo ")) {
+            } else if (commandType == CommandType.TODO) {
                 String description = command.substring(4).trim();
                 if (description.isEmpty()) {
                     throw new JassaBotException("The description of a todo cannot be empty.");
