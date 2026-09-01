@@ -1,4 +1,5 @@
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -185,7 +186,7 @@ public class JassaBot {
      *
      * @param command complete deadline command entered by the user
      * @param tasks tasks currently stored by the application
-     * @throws JassaBotException if the description or due-time marker is missing
+     * @throws JassaBotException if the description, due-time marker, or date is invalid
      */
     private static void addDeadline(String command, ArrayList<Task> tasks)
             throws JassaBotException {
@@ -199,12 +200,13 @@ public class JassaBot {
         if (byIndex == -1) {
             throw new JassaBotException("A deadline needs '/by' followed by its due time.");
         }
-        String byTime = command.substring(byIndex + " /by".length()).trim();
-        if (byTime.isEmpty()) {
+        String byDateTimeText = command.substring(byIndex + " /by".length()).trim();
+        if (byDateTimeText.isEmpty()) {
             throw new JassaBotException("A deadline needs '/by' followed by its due time.");
         }
 
-        Deadline newDeadline = new Deadline(description, byTime);
+        LocalDateTime by = Parser.parseDateTime(byDateTimeText);
+        Deadline newDeadline = new Deadline(description, by);
         tasks.add(newDeadline);
         try {
             storage.saveTasks(tasks);
@@ -220,7 +222,7 @@ public class JassaBot {
      *
      * @param command complete event command entered by the user
      * @param tasks tasks currently stored by the application
-     * @throws JassaBotException if the description or time markers are missing
+     * @throws JassaBotException if the description, time markers, or dates are invalid
      */
     private static void addEvent(String command, ArrayList<Task> tasks)
             throws JassaBotException {
@@ -235,13 +237,16 @@ public class JassaBot {
         if (fromIndex == -1 || toIndex == -1 || toIndex <= fromIndex) {
             throw new JassaBotException("An event needs both '/from' and '/to' time markers.");
         }
-        String from = command.substring(fromIndex + " /from".length(), toIndex).trim();
-        String to = command.substring(toIndex + " /to".length()).trim();
-        if (from.isEmpty() || to.isEmpty()) {
+        String fromDateTimeText = command.substring(
+                fromIndex + " /from".length(), toIndex).trim();
+        String toDateTimeText = command.substring(toIndex + " /to".length()).trim();
+        if (fromDateTimeText.isEmpty() || toDateTimeText.isEmpty()) {
             throw new JassaBotException(
                     "An event needs non-empty times after both '/from' and '/to'.");
         }
 
+        LocalDateTime from = Parser.parseDateTime(fromDateTimeText);
+        LocalDateTime to = Parser.parseDateTime(toDateTimeText);
         Event newEvent = new Event(description, from, to);
         tasks.add(newEvent);
         try {

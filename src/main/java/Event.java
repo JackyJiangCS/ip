@@ -1,9 +1,21 @@
-public class Event extends Task{
+import java.time.LocalDateTime;
 
-    protected String from;
-    protected String to;
+/**
+ * Represents an activity occurring between two dates and times.
+ */
+public class Event extends Task {
 
-    public Event(String description, String from, String to) {
+    protected final LocalDateTime from;
+    protected final LocalDateTime to;
+
+    /**
+     * Creates an event task.
+     *
+     * @param description activity that will take place
+     * @param from date and time at which the event starts
+     * @param to date and time at which the event ends
+     */
+    public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
         this.from = from;
         this.to = to;
@@ -11,11 +23,14 @@ public class Event extends Task{
 
     @Override
     public String toDataString() {
-        return super.toDataString("E") + " | " + encodeDataField(from) + " | " + encodeDataField(to);
+        return super.toDataString("E") + " | " + DateTimeFormats.formatForStorage(from)
+                + " | " + DateTimeFormats.formatForStorage(to);
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E]" + super.toString() + " (from: "
+                + DateTimeFormats.formatForDisplay(from) + " to: "
+                + DateTimeFormats.formatForDisplay(to) + ")";
     }
 }

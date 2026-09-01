@@ -96,7 +96,7 @@ Each case below is one fresh console session. After sending an input, compare th
 2. Input:
 
    ```text
-   deadline return book /by Sunday
+   deadline return book /by 2/12/2019 1800
    ```
 
    Expected output:
@@ -104,7 +104,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Got it. I've added this task:
-     [D][ ] return book (by: Sunday)
+     [D][ ] return book (by: Dec 2 2019, 6:00 PM)
    Now you have 2 tasks in the list.
    ____________________________________________________________
    ```
@@ -112,7 +112,7 @@ Each case below is one fresh console session. After sending an input, compare th
 3. Input:
 
    ```text
-   event project meeting /from Mon 2pm /to 4pm
+   event project meeting /from 2019-12-02 1400 /to 2019-12-02 1600
    ```
 
    Expected output:
@@ -120,7 +120,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Got it. I've added this task:
-     [E][ ] project meeting (from: Mon 2pm to: 4pm)
+     [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
    Now you have 3 tasks in the list.
    ____________________________________________________________
    ```
@@ -137,8 +137,8 @@ Each case below is one fresh console session. After sending an input, compare th
    ____________________________________________________________
    Here are the tasks in your list:
    1.[T][ ] read book
-   2.[D][ ] return book (by: Sunday)
-   3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+   2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
+   3.[E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
    ____________________________________________________________
    ```
 
@@ -387,7 +387,7 @@ Each case below is one fresh console session. After sending an input, compare th
 4. Input:
 
    ```text
-   deadline return book /by Sunday
+   deadline return book /by 2/12/2019 1800
    ```
 
    Expected output:
@@ -395,7 +395,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Got it. I've added this task:
-     [D][ ] return book (by: Sunday)
+     [D][ ] return book (by: Dec 2 2019, 6:00 PM)
    Now you have 2 tasks in the list.
    ____________________________________________________________
    ```
@@ -417,7 +417,7 @@ Each case below is one fresh console session. After sending an input, compare th
 6. Input:
 
    ```text
-   event project meeting /from Mon 2pm /to 4pm
+   event project meeting /from 2019-12-02 1400 /to 2019-12-02 1600
    ```
 
    Expected output:
@@ -425,7 +425,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Got it. I've added this task:
-     [E][ ] project meeting (from: Mon 2pm to: 4pm)
+     [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
    Now you have 3 tasks in the list.
    ____________________________________________________________
    ```
@@ -470,8 +470,8 @@ Each case below is one fresh console session. After sending an input, compare th
    ____________________________________________________________
    Here are the tasks in your list:
    1.[T][ ] read book
-   2.[D][ ] return book (by: Sunday)
-   3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+   2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
+   3.[E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
    ____________________________________________________________
    ```
 
@@ -514,7 +514,7 @@ Each case below is one fresh console session. After sending an input, compare th
 2. Input:
 
    ```text
-   deadline return book /by Sunday
+   deadline return book /by 2/12/2019 1800
    ```
 
    Expected output:
@@ -522,7 +522,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Got it. I've added this task:
-     [D][ ] return book (by: Sunday)
+     [D][ ] return book (by: Dec 2 2019, 6:00 PM)
    Now you have 2 tasks in the list.
    ____________________________________________________________
    ```
@@ -530,7 +530,7 @@ Each case below is one fresh console session. After sending an input, compare th
 3. Input:
 
    ```text
-   event project meeting /from Aug 6th 2pm /to 4pm
+   event project meeting /from 6/8/2019 1400 /to 6/8/2019 1600
    ```
 
    Expected output:
@@ -538,7 +538,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Got it. I've added this task:
-     [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+     [E][ ] project meeting (from: Aug 6 2019, 2:00 PM to: Aug 6 2019, 4:00 PM)
    Now you have 3 tasks in the list.
    ____________________________________________________________
    ```
@@ -586,7 +586,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Noted. I've removed this task:
-     [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+     [E][ ] project meeting (from: Aug 6 2019, 2:00 PM to: Aug 6 2019, 4:00 PM)
    Now you have 4 tasks in the list.
    ____________________________________________________________
    ```
@@ -617,7 +617,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ____________________________________________________________
    Here are the tasks in your list:
    1.[T][ ] read book
-   2.[D][ ] return book (by: Sunday)
+   2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
    3.[T][ ] exercise
    4.[T][ ] sleep
    ____________________________________________________________
@@ -668,7 +668,7 @@ Each case below is one fresh console session. After sending an input, compare th
 2. Input:
 
    ```text
-   deadline return book /by Sunday
+   deadline return book /by 2/12/2019 1800
    ```
 
    Expected output:
@@ -676,7 +676,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Got it. I've added this task:
-     [D][ ] return book (by: Sunday)
+     [D][ ] return book (by: Dec 2 2019, 6:00 PM)
    Now you have 2 tasks in the list.
    ____________________________________________________________
    ```
@@ -685,13 +685,13 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    T | 0 | read book
-   D | 0 | return book | Sunday
+   D | 0 | return book | 2019-12-02T18:00
    ```
 
 3. Input:
 
    ```text
-   event project meeting /from Mon 2pm /to 4pm
+   event project meeting /from 2019-12-02 1400 /to 2019-12-02 1600
    ```
 
    Expected output:
@@ -699,7 +699,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Got it. I've added this task:
-     [E][ ] project meeting (from: Mon 2pm to: 4pm)
+     [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
    Now you have 3 tasks in the list.
    ____________________________________________________________
    ```
@@ -708,8 +708,8 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    T | 0 | read book
-   D | 0 | return book | Sunday
-   E | 0 | project meeting | Mon 2pm | 4pm
+   D | 0 | return book | 2019-12-02T18:00
+   E | 0 | project meeting | 2019-12-02T14:00 | 2019-12-02T16:00
    ```
 
 4. Input:
@@ -731,8 +731,8 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    T | 1 | read book
-   D | 0 | return book | Sunday
-   E | 0 | project meeting | Mon 2pm | 4pm
+   D | 0 | return book | 2019-12-02T18:00
+   E | 0 | project meeting | 2019-12-02T14:00 | 2019-12-02T16:00
    ```
 
 5. Input:
@@ -754,8 +754,8 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    T | 0 | read book
-   D | 0 | return book | Sunday
-   E | 0 | project meeting | Mon 2pm | 4pm
+   D | 0 | return book | 2019-12-02T18:00
+   E | 0 | project meeting | 2019-12-02T14:00 | 2019-12-02T16:00
    ```
 
 6. Input:
@@ -769,7 +769,7 @@ Each case below is one fresh console session. After sending an input, compare th
    ```text
    ____________________________________________________________
    Noted. I've removed this task:
-     [D][ ] return book (by: Sunday)
+     [D][ ] return book (by: Dec 2 2019, 6:00 PM)
    Now you have 2 tasks in the list.
    ____________________________________________________________
    ```
@@ -778,7 +778,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    T | 0 | read book
-   E | 0 | project meeting | Mon 2pm | 4pm
+   E | 0 | project meeting | 2019-12-02T14:00 | 2019-12-02T16:00
    ```
 
 7. Input:
@@ -803,8 +803,8 @@ Each case below is one fresh console session. After sending an input, compare th
 
 ```text
 T | 1 | read book
-D | 0 | return book | Sunday
-E | 1 | project meeting | Mon 2pm | 4pm
+D | 0 | return book | 2019-12-02T18:00
+E | 1 | project meeting | 2019-12-02T14:00 | 2019-12-02T16:00
 ```
 
 **Inputs and expected output:**
@@ -821,8 +821,8 @@ E | 1 | project meeting | Mon 2pm | 4pm
    ____________________________________________________________
    Here are the tasks in your list:
    1.[T][X] read book
-   2.[D][ ] return book (by: Sunday)
-   3.[E][X] project meeting (from: Mon 2pm to: 4pm)
+   2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
+   3.[E][X] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
    ____________________________________________________________
    ```
 
@@ -907,7 +907,7 @@ T | 0 | compare A \| B \\ C
 
 ### TC-11 — Recover valid tasks from malformed data
 
-**Aim:** Verify that malformed task types, field counts, and statuses produce precise warnings while valid lines still load.
+**Aim:** Verify that malformed task types, field counts, statuses, and dates produce precise warnings while valid lines still load.
 
 **Initial saved file:**
 
@@ -918,7 +918,9 @@ T | 0 | too | many
 T | 2 | invalid status
 D | 0 | missing time
 E | 0 | missing end | 2pm
-E | 1 | valid meeting | 2pm | 4pm
+D | 0 | invalid stored deadline | Sunday
+E | 0 | invalid stored event | 2019-12-02T14:00 | 4pm
+E | 1 | valid meeting | 2019-12-02T14:00 | 2019-12-02T16:00
 ```
 
 **Expected startup continuation:**
@@ -929,6 +931,8 @@ WARNING: Skipped data line 3: task type 'T' expects 3 fields but found 4.
 WARNING: Skipped data line 4: status must be 0 or 1.
 WARNING: Skipped data line 5: task type 'D' expects 4 fields but found 3.
 WARNING: Skipped data line 6: task type 'E' expects 5 fields but found 4.
+WARNING: Skipped data line 7: deadline date and time must use yyyy-MM-dd'T'HH:mm format.
+WARNING: Skipped data line 8: event end date and time must use yyyy-MM-dd'T'HH:mm format.
 ____________________________________________________________
 ```
 
@@ -946,7 +950,7 @@ ____________________________________________________________
    ____________________________________________________________
    Here are the tasks in your list:
    1.[T][X] valid todo
-   2.[E][X] valid meeting (from: 2pm to: 4pm)
+   2.[E][X] valid meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
    ____________________________________________________________
    ```
 
@@ -1239,6 +1243,105 @@ ____________________________________________________________
    ```
 
 2. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+### TC-16 - Parse and validate dates and times
+
+**Aim:** Verify both supported date styles, optional times, friendly display formatting, and rejection of impossible dates without adding a task.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   deadline return book /by 2/12/2019 1800
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [D][ ] return book (by: Dec 2 2019, 6:00 PM)
+   Now you have 1 tasks in the list.
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   event project meeting /from 2019-12-02 1400 /to 2019-12-02 1600
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
+   Now you have 2 tasks in the list.
+   ____________________________________________________________
+   ```
+
+3. Input:
+
+   ```text
+   deadline date only /by 2019-10-15
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [D][ ] date only (by: Oct 15 2019)
+   Now you have 3 tasks in the list.
+   ____________________________________________________________
+   ```
+
+4. Input:
+
+   ```text
+   deadline impossible /by 2019-02-29 1200
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! Please enter a valid date as yyyy-MM-dd or d/M/yyyy, optionally followed by a time in HHmm format.
+   ____________________________________________________________
+   ```
+
+5. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the tasks in your list:
+   1.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
+   2.[E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
+   3.[D][ ] date only (by: Oct 15 2019)
+   ____________________________________________________________
+   ```
+
+6. Input:
 
    ```text
    bye

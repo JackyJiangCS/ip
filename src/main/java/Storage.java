@@ -4,6 +4,8 @@ import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,10 +146,10 @@ public class Storage {
         Task task = switch (taskType) {
         case "T" -> new Todo(description);
         case "D" -> new Deadline(description,
-                requireText(decodeDataField(fields[3]), "deadline time"));
+                parseStoredDateTime(fields[3], "deadline date and time"));
         case "E" -> new Event(description,
-                requireText(decodeDataField(fields[3]), "event start time"),
-                requireText(decodeDataField(fields[4]), "event end time"));
+                parseStoredDateTime(fields[3], "event start date and time"),
+                parseStoredDateTime(fields[4], "event end date and time"));
         default -> throw new AssertionError("Task type was validated above.");
         };
 
@@ -194,6 +196,25 @@ public class Storage {
             throw new StorageException(fieldName + " cannot be empty.");
         }
         return value;
+    }
+
+    /**
+     * Parses one date-time field from the stable format used in the task data file.
+     *
+     * @param value stored date-time field
+     * @param fieldName name used to identify the field in a warning
+     * @return parsed date and time
+     * @throws StorageException if the field is not a valid stored date and time
+     */
+    private LocalDateTime parseStoredDateTime(String value, String fieldName)
+            throws StorageException {
+        try {
+            return DateTimeFormats.parseStorageDateTime(
+                    requireText(decodeDataField(value), fieldName));
+        } catch (DateTimeParseException e) {
+            throw new StorageException(
+                    fieldName + " must use yyyy-MM-dd'T'HH:mm format.");
+        }
     }
 
     /**

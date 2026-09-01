@@ -1,3 +1,6 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+
 /**
  * Interprets user input as commands understood by JassaBot.
  */
@@ -34,5 +37,26 @@ public final class Parser {
             return CommandType.TODO;
         }
         return CommandType.UNKNOWN;
+    }
+
+    /**
+     * Parses a task date and optional time from a supported user-facing format.
+     *
+     * <p>Supported formats are {@code yyyy-MM-dd}, {@code yyyy-MM-dd HHmm},
+     * {@code d/M/yyyy}, and {@code d/M/yyyy HHmm}. A date without a time is
+     * represented as midnight.</p>
+     *
+     * @param value date and optional time entered after a command marker
+     * @return parsed date and time
+     * @throws JassaBotException if the value is not a real date in a supported format
+     */
+    public static LocalDateTime parseDateTime(String value) throws JassaBotException {
+        try {
+            return DateTimeFormats.parseUserDateTime(value);
+        } catch (DateTimeParseException e) {
+            throw new JassaBotException(
+                    "Please enter a valid date as yyyy-MM-dd or d/M/yyyy, "
+                            + "optionally followed by a time in HHmm format.");
+        }
     }
 }
