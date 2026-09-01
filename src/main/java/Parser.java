@@ -9,8 +9,8 @@ public final class Parser {
      * Determines the type of a user-entered command.
      *
      * <p>The matching rules preserve the application's existing behavior. For example,
-     * {@code deadline} is recognised so that JassaBot can report its missing description,
-     * while {@code mark} without a task number remains an unknown command.</p>
+     * {@code deadline} is recognised so JassaBot can report its missing description, while
+     * {@code mark} without a task number is recognised so it can report an invalid number.</p>
      *
      * @param command complete line entered by the user
      * @return the matching command type, or {@link CommandType#UNKNOWN} if none matches
@@ -20,11 +20,11 @@ public final class Parser {
             return CommandType.BYE;
         } else if (command.equals("list")) {
             return CommandType.LIST;
-        } else if (command.startsWith("mark ")) {
+        } else if (command.equals("mark") || command.startsWith("mark ")) {
             return CommandType.MARK;
-        } else if (command.startsWith("unmark ")) {
+        } else if (command.equals("unmark") || command.startsWith("unmark ")) {
             return CommandType.UNMARK;
-        } else if (command.startsWith("delete ")) {
+        } else if (command.equals("delete") || command.startsWith("delete ")) {
             return CommandType.DELETE;
         } else if (command.equals("deadline") || command.startsWith("deadline ")) {
             return CommandType.DEADLINE;

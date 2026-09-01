@@ -11,6 +11,28 @@ javac -d $uiTestClasses src\main\java\*.java
 java -cp $uiTestClasses JassaBot
 ```
 
+Before each test case, remove the saved task-data path so every session starts with the same hard-disk state. The path check keeps the recursive cleanup inside the repository's `data` directory:
+
+```powershell
+$projectRoot = [IO.Path]::GetFullPath((Get-Location).Path)
+$expectedDataDirectory = [IO.Path]::GetFullPath((Join-Path $projectRoot 'data'))
+$taskDataPath = [IO.Path]::GetFullPath((Join-Path $expectedDataDirectory 'jassabot.txt'))
+if ([IO.Path]::GetDirectoryName($taskDataPath) -ne $expectedDataDirectory) {
+    throw "Unexpected task-data path: $taskDataPath"
+}
+Remove-Item -Recurse -Force -LiteralPath $taskDataPath -ErrorAction SilentlyContinue
+```
+
+Storage-file blocks have the following meanings:
+
+- **Initial saved file:** create these exact lines after cleanup and before starting the process.
+- **Initial storage path:** create the stated file-system object after cleanup and before starting the process.
+- **Expected saved file:** compare these lines with `Get-Content .\data\jassabot.txt` after the preceding input. This deliberately ignores the operating system's line-ending convention.
+- **Expected startup continuation:** append these exact lines to the shared startup block for that case.
+- **Working directory:** start that case in the stated directory and resolve `data/jassabot.txt` relative to it.
+
+In an input block, `<blank line>` means send an empty line and `<close input>` means close the process's input stream without sending another line.
+
 The expected startup output for every test case is:
 
 ```text
@@ -602,6 +624,621 @@ Each case below is one fresh console session. After sending an input, compare th
    ```
 
 9. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+### TC-08 — Save every task-list change
+
+**Aim:** Verify that adding, marking, unmarking, and deleting tasks immediately rewrites `./data/jassabot.txt` with the complete current task list.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   todo read book
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] read book
+   Now you have 1 tasks in the list.
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 0 | read book
+   ```
+
+2. Input:
+
+   ```text
+   deadline return book /by Sunday
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [D][ ] return book (by: Sunday)
+   Now you have 2 tasks in the list.
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 0 | read book
+   D | 0 | return book | Sunday
+   ```
+
+3. Input:
+
+   ```text
+   event project meeting /from Mon 2pm /to 4pm
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [E][ ] project meeting (from: Mon 2pm to: 4pm)
+   Now you have 3 tasks in the list.
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 0 | read book
+   D | 0 | return book | Sunday
+   E | 0 | project meeting | Mon 2pm | 4pm
+   ```
+
+4. Input:
+
+   ```text
+   mark 1
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Nice! I've marked this task as done:
+     [T][X] read book
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 1 | read book
+   D | 0 | return book | Sunday
+   E | 0 | project meeting | Mon 2pm | 4pm
+   ```
+
+5. Input:
+
+   ```text
+   unmark 1
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OK, I've marked this task as not done yet:
+     [T][ ] read book
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 0 | read book
+   D | 0 | return book | Sunday
+   E | 0 | project meeting | Mon 2pm | 4pm
+   ```
+
+6. Input:
+
+   ```text
+   delete 2
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Noted. I've removed this task:
+     [D][ ] return book (by: Sunday)
+   Now you have 2 tasks in the list.
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 0 | read book
+   E | 0 | project meeting | Mon 2pm | 4pm
+   ```
+
+7. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+### TC-09 — Load saved tasks on startup
+
+**Aim:** Verify that a fresh application process reconstructs every task type and its completion status from `./data/jassabot.txt`.
+
+**Initial saved file:** After the common cleanup, create the file with these exact lines before starting the process.
+
+```text
+T | 1 | read book
+D | 0 | return book | Sunday
+E | 1 | project meeting | Mon 2pm | 4pm
+```
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the tasks in your list:
+   1.[T][X] read book
+   2.[D][ ] return book (by: Sunday)
+   3.[E][X] project meeting (from: Mon 2pm to: 4pm)
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+### TC-10 — Round-trip delimiter and backslash characters
+
+**Aim:** Verify that reserved storage characters in user text are escaped when saved and decoded without changing the task when loaded.
+
+**Initial saved file:**
+
+```text
+T | 0 | compare A \| B \\ C
+```
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the tasks in your list:
+   1.[T][ ] compare A | B \ C
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   todo save X | Y \ Z
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] save X | Y \ Z
+   Now you have 2 tasks in the list.
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 0 | compare A \| B \\ C
+   T | 0 | save X \| Y \\ Z
+   ```
+
+3. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+
+### TC-11 — Recover valid tasks from malformed data
+
+**Aim:** Verify that malformed task types, field counts, and statuses produce precise warnings while valid lines still load.
+
+**Initial saved file:**
+
+```text
+T | 1 | valid todo
+X | 0 | mystery task
+T | 0 | too | many
+T | 2 | invalid status
+D | 0 | missing time
+E | 0 | missing end | 2pm
+E | 1 | valid meeting | 2pm | 4pm
+```
+
+**Expected startup continuation:**
+
+```text
+WARNING: Skipped data line 2: unknown task type 'X'.
+WARNING: Skipped data line 3: task type 'T' expects 3 fields but found 4.
+WARNING: Skipped data line 4: status must be 0 or 1.
+WARNING: Skipped data line 5: task type 'D' expects 4 fields but found 3.
+WARNING: Skipped data line 6: task type 'E' expects 5 fields but found 4.
+____________________________________________________________
+```
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the tasks in your list:
+   1.[T][X] valid todo
+   2.[E][X] valid meeting (from: 2pm to: 4pm)
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+
+### TC-12 — Report storage-path failures and roll back
+
+**Aim:** Verify that a non-file storage path produces a startup warning and that a failed save leaves the in-memory task list unchanged.
+
+**Initial storage path:** Create a directory at `./data/jassabot.txt`.
+
+**Expected startup continuation:**
+
+```text
+WARNING: The task data path is not a regular file. Starting with an empty task list.
+____________________________________________________________
+```
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   todo should not remain
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I couldn't save your tasks, so no changes were made.
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the tasks in your list:
+   ____________________________________________________________
+   ```
+
+3. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+
+### TC-13 — Reject blank and incomplete commands
+
+**Aim:** Verify that blank input, missing task numbers, overflowed numbers, empty times, and surrounding whitespace are handled without crashing or adding invalid tasks.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   <blank line>
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! Please enter a command.
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   mark
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Please enter a valid task number.
+   ____________________________________________________________
+   ```
+
+3. Input:
+
+   ```text
+   unmark
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Please enter a valid task number.
+   ____________________________________________________________
+   ```
+
+4. Input:
+
+   ```text
+   delete
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Please enter a valid task number.
+   ____________________________________________________________
+   ```
+
+5. Input:
+
+   ```text
+   mark 999999999999999999999999
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Please enter a valid task number.
+   ____________________________________________________________
+   ```
+
+6. Input:
+
+   ```text
+   deadline return book /by
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! A deadline needs '/by' followed by its due time.
+   ____________________________________________________________
+   ```
+
+7. Input:
+
+   ```text
+   event meeting /from /to 4pm
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! An event needs non-empty times after both '/from' and '/to'.
+   ____________________________________________________________
+   ```
+
+8. Input:
+
+   ```text
+   event meeting /from 2pm /to
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! An event needs non-empty times after both '/from' and '/to'.
+   ____________________________________________________________
+   ```
+
+9. Input:
+
+   ```text
+      todo spaced task
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] spaced task
+   Now you have 1 tasks in the list.
+   ____________________________________________________________
+   ```
+
+10. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the tasks in your list:
+   1.[T][ ] spaced task
+   ____________________________________________________________
+   ```
+
+11. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+
+### TC-14 — Exit cleanly when input closes
+
+**Aim:** Verify that end-of-input is handled as a normal shutdown instead of throwing an exception.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   <close input>
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Input closed. Goodbye!
+   ____________________________________________________________
+   ```
+
+
+### TC-15 — Create storage on first run
+
+**Aim:** Verify that the OS-independent relative path creates the missing `data` folder and task file on a first run.
+
+**Working directory:** Start in a fresh temporary directory that does not contain a `data` folder.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   todo first-run task
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] first-run task
+   Now you have 1 tasks in the list.
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 0 | first-run task
+   ```
+
+2. Input:
 
    ```text
    bye

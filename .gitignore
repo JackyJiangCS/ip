@@ -16,6 +16,9 @@ bin/
 # Temp files
 _temp/
 
+# User task data
+/data/jassabot.txt
+
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
 
