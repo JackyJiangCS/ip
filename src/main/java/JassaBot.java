@@ -1,6 +1,5 @@
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 /**
  * Starts the JassaBot chatbot application.
@@ -33,7 +32,7 @@ public class JassaBot {
      */
     public void run() {
         Storage.LoadResult loadResult = storage.loadTasks();
-        ArrayList<Task> tasks = loadResult.getTasks();
+        TaskList tasks = new TaskList(loadResult.getTasks());
 
         ui.showWelcome();
         ui.showLoadingWarnings(loadResult.getWarnings());
@@ -76,8 +75,8 @@ public class JassaBot {
      *
      * @param tasks tasks currently stored by the application
      */
-    private void showTaskList(ArrayList<Task> tasks) {
-        ui.showTaskList(tasks);
+    private void showTaskList(TaskList tasks) {
+        ui.showTaskList(tasks.asList());
     }
 
     /**
@@ -87,7 +86,7 @@ public class JassaBot {
      * @param tasks tasks currently stored by the application
      * @throws JassaBotException if the task number is invalid or the changed list cannot be saved
      */
-    private void markTask(String command, ArrayList<Task> tasks) throws JassaBotException {
+    private void markTask(String command, TaskList tasks) throws JassaBotException {
         String number = command.substring("mark".length()).trim();
         int index = getTaskIndex(number, tasks.size());
         if (index == -1) {
@@ -97,12 +96,12 @@ public class JassaBot {
 
         Task task = tasks.get(index);
         boolean wasDone = task.isDone();
-        task.markAsDone();
+        tasks.mark(index);
         try {
-            storage.saveTasks(tasks);
+            storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
             if (!wasDone) {
-                task.markAsUndone();
+                tasks.unmark(index);
             }
             throw createSaveException();
         }
@@ -116,7 +115,7 @@ public class JassaBot {
      * @param tasks tasks currently stored by the application
      * @throws JassaBotException if the task number is invalid or the changed list cannot be saved
      */
-    private void unmarkTask(String command, ArrayList<Task> tasks) throws JassaBotException {
+    private void unmarkTask(String command, TaskList tasks) throws JassaBotException {
         String number = command.substring("unmark".length()).trim();
         int index = getTaskIndex(number, tasks.size());
         if (index == -1) {
@@ -126,12 +125,12 @@ public class JassaBot {
 
         Task task = tasks.get(index);
         boolean wasDone = task.isDone();
-        task.markAsUndone();
+        tasks.unmark(index);
         try {
-            storage.saveTasks(tasks);
+            storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
             if (wasDone) {
-                task.markAsDone();
+                tasks.mark(index);
             }
             throw createSaveException();
         }
@@ -145,7 +144,7 @@ public class JassaBot {
      * @param tasks tasks currently stored by the application
      * @throws JassaBotException if the task number is invalid or the changed list cannot be saved
      */
-    private void deleteTask(String command, ArrayList<Task> tasks) throws JassaBotException {
+    private void deleteTask(String command, TaskList tasks) throws JassaBotException {
         String number = command.substring("delete".length()).trim();
         int index = getTaskIndex(number, tasks.size());
         if (index == -1) {
@@ -155,7 +154,7 @@ public class JassaBot {
 
         Task removedTask = tasks.remove(index);
         try {
-            storage.saveTasks(tasks);
+            storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
             tasks.add(index, removedTask);
             throw createSaveException();
@@ -170,7 +169,7 @@ public class JassaBot {
      * @param tasks tasks currently stored by the application
      * @throws JassaBotException if the description, due-time marker, or date is invalid
      */
-    private void addDeadline(String command, ArrayList<Task> tasks)
+    private void addDeadline(String command, TaskList tasks)
             throws JassaBotException {
         int byIndex = findMarker(command, " /by");
         String description = byIndex == -1 ? command.substring(8).trim()
@@ -191,7 +190,7 @@ public class JassaBot {
         Deadline newDeadline = new Deadline(description, by);
         tasks.add(newDeadline);
         try {
-            storage.saveTasks(tasks);
+            storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
             tasks.remove(tasks.size() - 1);
             throw createSaveException();
@@ -206,7 +205,7 @@ public class JassaBot {
      * @param tasks tasks currently stored by the application
      * @throws JassaBotException if the description, time markers, or dates are invalid
      */
-    private void addEvent(String command, ArrayList<Task> tasks)
+    private void addEvent(String command, TaskList tasks)
             throws JassaBotException {
         int fromIndex = findMarker(command, " /from");
         int toIndex = findMarker(command, " /to");
@@ -232,7 +231,7 @@ public class JassaBot {
         Event newEvent = new Event(description, from, to);
         tasks.add(newEvent);
         try {
-            storage.saveTasks(tasks);
+            storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
             tasks.remove(tasks.size() - 1);
             throw createSaveException();
@@ -247,7 +246,7 @@ public class JassaBot {
      * @param tasks tasks currently stored by the application
      * @throws JassaBotException if the description is missing
      */
-    private void addTodo(String command, ArrayList<Task> tasks)
+    private void addTodo(String command, TaskList tasks)
             throws JassaBotException {
         String description = command.substring(4).trim();
         if (description.isEmpty()) {
@@ -257,7 +256,7 @@ public class JassaBot {
         Todo newTodo = new Todo(description);
         tasks.add(newTodo);
         try {
-            storage.saveTasks(tasks);
+            storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
             tasks.remove(tasks.size() - 1);
             throw createSaveException();
