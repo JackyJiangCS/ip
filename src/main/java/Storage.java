@@ -74,7 +74,7 @@ public class Storage {
      * @param tasks tasks to save
      * @throws StorageException if the directory or file cannot be written
      */
-    public void saveTasks(ArrayList<Task> tasks) throws StorageException {
+    public void saveTasks(List<Task> tasks) throws StorageException {
         Path parentDirectory = filePath.getParent();
         if (parentDirectory == null) {
             parentDirectory = Path.of(".");
