@@ -9,27 +9,28 @@ import jassabot.util.DateTimeFormats;
  */
 public class Deadline extends Task {
 
-    protected final LocalDateTime by;
+    private final LocalDateTime dueDateTime;
 
     /**
      * Creates a deadline task.
      *
-     * @param description work that must be completed
-     * @param by date and time by which the task is due
+     * @param description Work that must be completed.
+     * @param dueDateTime Date and time by which the task is due.
      */
-    public Deadline(String description, LocalDateTime by) {
+    public Deadline(String description, LocalDateTime dueDateTime) {
         super(description);
-        this.by = by;
+        this.dueDateTime = dueDateTime;
     }
 
     @Override
     public String toDataString() {
-        return super.toDataString("D") + " | " + DateTimeFormats.formatForStorage(by);
+        return super.toDataString("D") + " | "
+                + DateTimeFormats.formatForStorage(dueDateTime);
     }
 
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: "
-                + DateTimeFormats.formatForDisplay(by) + ")";
+                + DateTimeFormats.formatForDisplay(dueDateTime) + ")";
     }
 }

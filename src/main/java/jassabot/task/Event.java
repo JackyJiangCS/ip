@@ -9,32 +9,33 @@ import jassabot.util.DateTimeFormats;
  */
 public class Event extends Task {
 
-    protected final LocalDateTime from;
-    protected final LocalDateTime to;
+    private final LocalDateTime startDateTime;
+    private final LocalDateTime endDateTime;
 
     /**
      * Creates an event task.
      *
-     * @param description activity that will take place
-     * @param from date and time at which the event starts
-     * @param to date and time at which the event ends
+     * @param description Activity that will take place.
+     * @param startDateTime Date and time at which the event starts.
+     * @param endDateTime Date and time at which the event ends.
      */
-    public Event(String description, LocalDateTime from, LocalDateTime to) {
+    public Event(String description, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     @Override
     public String toDataString() {
-        return super.toDataString("E") + " | " + DateTimeFormats.formatForStorage(from)
-                + " | " + DateTimeFormats.formatForStorage(to);
+        return super.toDataString("E") + " | "
+                + DateTimeFormats.formatForStorage(startDateTime)
+                + " | " + DateTimeFormats.formatForStorage(endDateTime);
     }
 
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: "
-                + DateTimeFormats.formatForDisplay(from) + " to: "
-                + DateTimeFormats.formatForDisplay(to) + ")";
+                + DateTimeFormats.formatForDisplay(startDateTime) + " to: "
+                + DateTimeFormats.formatForDisplay(endDateTime) + ")";
     }
 }

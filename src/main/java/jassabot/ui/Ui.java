@@ -29,7 +29,7 @@ public class Ui {
     /**
      * Returns whether another command can be read without consuming it.
      *
-     * @return {@code true} when another input line is available
+     * @return {@code true} when another input line is available.
      */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
@@ -38,7 +38,7 @@ public class Ui {
     /**
      * Reads and trims the next command entered by the user.
      *
-     * @return the next command line without surrounding whitespace
+     * @return Next command line without surrounding whitespace.
      */
     public String readCommand() {
         return scanner.nextLine().trim();
@@ -56,7 +56,7 @@ public class Ui {
     /**
      * Displays non-fatal problems found while loading saved tasks.
      *
-     * @param warnings user-facing storage warnings
+     * @param warnings User-facing storage warnings.
      */
     public void showLoadingWarnings(List<String> warnings) {
         for (String warning : warnings) {
@@ -75,7 +75,7 @@ public class Ui {
     /**
      * Displays every task in its current list position.
      *
-     * @param tasks tasks currently stored by the application
+     * @param tasks Tasks currently stored by the application.
      */
     public void showTaskList(List<Task> tasks) {
         System.out.println("Here are the tasks in your list:");

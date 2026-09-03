@@ -101,7 +101,7 @@ public class ParserTest {
     /**
      * Verifies that an invalid date-time produces the parser's corrective user message.
      *
-     * @param value invalid date-time text to parse
+     * @param value Invalid date-time text to parse.
      */
     private static void assertInvalidDateTime(String value) {
         JassaBotException exception = assertThrows(
