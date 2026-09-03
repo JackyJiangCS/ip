@@ -26,6 +26,7 @@ public class ParserTest {
                 () -> assertEquals(CommandType.MARK, Parser.parseCommandType("mark")),
                 () -> assertEquals(CommandType.UNMARK, Parser.parseCommandType("unmark")),
                 () -> assertEquals(CommandType.DELETE, Parser.parseCommandType("delete")),
+                () -> assertEquals(CommandType.FIND, Parser.parseCommandType("find")),
                 () -> assertEquals(CommandType.DEADLINE, Parser.parseCommandType("deadline")),
                 () -> assertEquals(CommandType.EVENT, Parser.parseCommandType("event")),
                 () -> assertEquals(CommandType.TODO, Parser.parseCommandType("todo"))
@@ -38,6 +39,7 @@ public class ParserTest {
                 () -> assertEquals(CommandType.MARK, Parser.parseCommandType("mark 1")),
                 () -> assertEquals(CommandType.UNMARK, Parser.parseCommandType("unmark 1")),
                 () -> assertEquals(CommandType.DELETE, Parser.parseCommandType("delete 1")),
+                () -> assertEquals(CommandType.FIND, Parser.parseCommandType("find book")),
                 () -> assertEquals(CommandType.DEADLINE,
                         Parser.parseCommandType("deadline return book /by 2019-12-02")),
                 () -> assertEquals(CommandType.EVENT,
@@ -55,6 +57,7 @@ public class ParserTest {
                 () -> assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("bye now")),
                 () -> assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("list tasks")),
                 () -> assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("mark1")),
+                () -> assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("findbook")),
                 () -> assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("todoist")),
                 () -> assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("todo\tread book"))
         );

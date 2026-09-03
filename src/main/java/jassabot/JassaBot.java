@@ -69,12 +69,13 @@ public class JassaBot {
                 case MARK -> markTask(command, tasks);
                 case UNMARK -> unmarkTask(command, tasks);
                 case DELETE -> deleteTask(command, tasks);
+                case FIND -> findTasks(command, tasks);
                 case DEADLINE -> addDeadline(command, tasks);
                 case EVENT -> addEvent(command, tasks);
                 case TODO -> addTodo(command, tasks);
                 case UNKNOWN -> throw new JassaBotException(
                         "I don't recognise that command. Try todo, deadline, event, list, mark, "
-                                + "unmark, delete, or bye.");
+                                + "unmark, delete, find, or bye.");
                 }
             } catch (JassaBotException e) {
                 ui.showError(e.getMessage());
@@ -91,6 +92,21 @@ public class JassaBot {
      */
     private void showTaskList(TaskList tasks) {
         ui.showTaskList(tasks.asList());
+    }
+
+    /**
+     * Displays tasks whose descriptions contain the keyword from a user command.
+     *
+     * @param command complete find command entered by the user
+     * @param tasks tasks currently stored by the application
+     * @throws JassaBotException if no search keyword was supplied
+     */
+    private void findTasks(String command, TaskList tasks) throws JassaBotException {
+        String keyword = command.substring("find".length()).trim();
+        if (keyword.isEmpty()) {
+            throw new JassaBotException("Please enter a keyword to find.");
+        }
+        ui.showMatchingTasks(tasks.find(keyword));
     }
 
     /**
