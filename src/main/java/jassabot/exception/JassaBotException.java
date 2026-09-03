@@ -1,3 +1,5 @@
+package jassabot.exception;
+
 /**
  * Represents an error caused by invalid input to the JassaBot chatbot.
  */

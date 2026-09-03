@@ -1,4 +1,8 @@
+package jassabot.task;
+
 import java.time.LocalDateTime;
+
+import jassabot.util.DateTimeFormats;
 
 /**
  * Represents a task that must be completed by a specific date and time.

@@ -1,5 +1,9 @@
+package jassabot.ui;
+
 import java.util.List;
 import java.util.Scanner;
+
+import jassabot.task.Task;
 
 /**
  * Handles all console input and output for JassaBot.

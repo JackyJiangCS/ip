@@ -1,4 +1,8 @@
+package jassabot.task;
+
 import java.time.LocalDateTime;
+
+import jassabot.util.DateTimeFormats;
 
 /**
  * Represents an activity occurring between two dates and times.

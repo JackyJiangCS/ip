@@ -1,3 +1,5 @@
+package jassabot.storage;
+
 /**
  * Represents a recoverable problem while parsing or saving task data.
  */
