@@ -25,12 +25,22 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Converts this event into one line suitable for saving to the storage file.
+     *
+     * @return Storage-file representation of this event.
+     */
     @Override
     public String toDataString() {
         return super.toDataString("E") + " | " + DateTimeFormats.formatForStorage(from)
                 + " | " + DateTimeFormats.formatForStorage(to);
     }
 
+    /**
+     * Returns the type, completion status, description, and time range used to display this event.
+     *
+     * @return Display representation of this event.
+     */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: "

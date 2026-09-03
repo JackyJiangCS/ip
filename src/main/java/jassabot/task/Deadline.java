@@ -22,11 +22,21 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /**
+     * Converts this deadline into one line suitable for saving to the storage file.
+     *
+     * @return Storage-file representation of this deadline.
+     */
     @Override
     public String toDataString() {
         return super.toDataString("D") + " | " + DateTimeFormats.formatForStorage(by);
     }
 
+    /**
+     * Returns the type, completion status, description, and due date used to display this deadline.
+     *
+     * @return Display representation of this deadline.
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: "

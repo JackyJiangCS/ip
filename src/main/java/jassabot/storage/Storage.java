@@ -237,10 +237,20 @@ public class Storage {
             this.warnings = List.copyOf(warnings);
         }
 
+        /**
+         * Returns the successfully loaded tasks in storage-file order.
+         *
+         * @return Loaded tasks.
+         */
         public ArrayList<Task> getTasks() {
             return tasks;
         }
 
+        /**
+         * Returns the non-fatal warnings encountered while loading tasks.
+         *
+         * @return Unmodifiable list of loading warnings.
+         */
         public List<String> getWarnings() {
             return warnings;
         }
