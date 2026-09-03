@@ -27,8 +27,8 @@ public class Storage {
     /**
      * Creates a storage object that writes to the given relative file path.
      *
-     * @param filePath relative path of the file used to store tasks
-     * @throws IllegalArgumentException if {@code filePath} is absolute
+     * @param filePath Relative path of the file used to store tasks.
+     * @throws IllegalArgumentException If {@code filePath} is absolute.
      */
     public Storage(Path filePath) {
         if (filePath.isAbsolute()) {
@@ -41,7 +41,7 @@ public class Storage {
      * Loads every valid task from the storage file and reports malformed lines as warnings.
      * A missing file represents an empty task list, while unreadable paths produce a warning.
      *
-     * @return loaded tasks together with any non-fatal warnings
+     * @return Loaded tasks together with any non-fatal warnings.
      */
     public LoadResult loadTasks() {
         ArrayList<Task> tasks = new ArrayList<>();
@@ -79,8 +79,8 @@ public class Storage {
     /**
      * Atomically rewrites the storage file so a failed write cannot truncate the last good data.
      *
-     * @param tasks tasks to save
-     * @throws StorageException if the directory or file cannot be written
+     * @param tasks Tasks to save.
+     * @throws StorageException If the directory or file cannot be written.
      */
     public void saveTasks(List<Task> tasks) throws StorageException {
         Path parentDirectory = filePath.getParent();
@@ -124,18 +124,18 @@ public class Storage {
     /**
      * Reconstructs one task from its delimiter-separated storage representation.
      *
-     * @param taskLine one line read from the storage file
-     * @return the reconstructed task
-     * @throws StorageException if the line has an unknown type, invalid status, or wrong field count
+     * @param taskLine One line read from the storage file.
+     * @return Reconstructed task.
+     * @throws StorageException If the line has an unknown type, invalid status, or wrong field count.
      */
     private Task parseTask(String taskLine) throws StorageException {
         String[] fields = taskLine.split(FIELD_DELIMITER_REGEX, -1);
         String taskType = fields[0];
         int expectedFieldCount = switch (taskType) {
-        case "T" -> 3;
-        case "D" -> 4;
-        case "E" -> 5;
-        default -> throw new StorageException("unknown task type '" + taskType + "'.");
+            case "T" -> 3;
+            case "D" -> 4;
+            case "E" -> 5;
+            default -> throw new StorageException("unknown task type '" + taskType + "'.");
         };
 
         if (fields.length != expectedFieldCount) {
@@ -152,13 +152,13 @@ public class Storage {
         }
 
         Task task = switch (taskType) {
-        case "T" -> new Todo(description);
-        case "D" -> new Deadline(description,
-                parseStoredDateTime(fields[3], "deadline date and time"));
-        case "E" -> new Event(description,
-                parseStoredDateTime(fields[3], "event start date and time"),
-                parseStoredDateTime(fields[4], "event end date and time"));
-        default -> throw new AssertionError("Task type was validated above.");
+            case "T" -> new Todo(description);
+            case "D" -> new Deadline(description,
+                    parseStoredDateTime(fields[3], "deadline date and time"));
+            case "E" -> new Event(description,
+                    parseStoredDateTime(fields[3], "event start date and time"),
+                    parseStoredDateTime(fields[4], "event end date and time"));
+            default -> throw new AssertionError("Task type was validated above.");
         };
 
         if (fields[1].equals("1")) {
@@ -171,8 +171,8 @@ public class Storage {
      * Reverses the escaping used by {@link Task#toDataString()}.
      * Unknown escape sequences remain unchanged for compatibility with older data files.
      *
-     * @param encodedField stored text field
-     * @return decoded user text
+     * @param encodedField Stored text field.
+     * @return Decoded user text.
      */
     private String decodeDataField(String encodedField) {
         StringBuilder decodedField = new StringBuilder();
@@ -194,10 +194,10 @@ public class Storage {
     /**
      * Ensures a required task-specific text field is not blank.
      *
-     * @param value decoded field value
-     * @param fieldName user-facing name of the field
-     * @return the original non-blank value
-     * @throws StorageException if the field is blank
+     * @param value Decoded field value.
+     * @param fieldName User-facing name of the field.
+     * @return Original non-blank value.
+     * @throws StorageException If the field is blank.
      */
     private String requireText(String value, String fieldName) throws StorageException {
         if (value.isBlank()) {
@@ -209,10 +209,10 @@ public class Storage {
     /**
      * Parses one date-time field from the stable format used in the task data file.
      *
-     * @param value stored date-time field
-     * @param fieldName name used to identify the field in a warning
-     * @return parsed date and time
-     * @throws StorageException if the field is not a valid stored date and time
+     * @param value Stored date-time field.
+     * @param fieldName Name used to identify the field in a warning.
+     * @return Parsed date and time.
+     * @throws StorageException If the field is not a valid stored date and time.
      */
     private LocalDateTime parseStoredDateTime(String value, String fieldName)
             throws StorageException {

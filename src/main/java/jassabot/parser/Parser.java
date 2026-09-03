@@ -20,8 +20,8 @@ public final class Parser {
      * {@code deadline} is recognised so JassaBot can report its missing description, while
      * {@code mark} without a task number is recognised so it can report an invalid number.</p>
      *
-     * @param command complete line entered by the user
-     * @return the matching command type, or {@link CommandType#UNKNOWN} if none matches
+     * @param command Complete line entered by the user.
+     * @return Matching command type, or {@link CommandType#UNKNOWN} if none matches.
      */
     public static CommandType parseCommandType(String command) {
         if (command.equals("bye")) {
@@ -51,9 +51,9 @@ public final class Parser {
      * {@code d/M/yyyy}, and {@code d/M/yyyy HHmm}. A date without a time is
      * represented as midnight.</p>
      *
-     * @param value date and optional time entered after a command marker
-     * @return parsed date and time
-     * @throws JassaBotException if the value is not a real date in a supported format
+     * @param value Date and optional time entered after a command marker.
+     * @return Parsed date and time.
+     * @throws JassaBotException If the value is not a real date in a supported format.
      */
     public static LocalDateTime parseDateTime(String value) throws JassaBotException {
         try {

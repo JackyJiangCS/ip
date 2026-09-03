@@ -31,9 +31,9 @@ public final class DateTimeFormats {
     /**
      * Parses a date with an optional 24-hour time. A date without a time starts at midnight.
      *
-     * @param value date entered by the user
-     * @return parsed date and time
-     * @throws DateTimeParseException if the value is not a supported or valid date
+     * @param value Date entered by the user.
+     * @return Parsed date and time.
+     * @throws DateTimeParseException If the value is not a supported or valid date.
      */
     public static LocalDateTime parseUserDateTime(String value) {
         for (DateTimeFormatter formatter : USER_DATE_TIME_FORMATS) {
@@ -56,8 +56,8 @@ public final class DateTimeFormats {
     /**
      * Formats a date and time in a friendly form for chatbot responses.
      *
-     * @param dateTime date and time to display
-     * @return value such as {@code Dec 2 2019, 6:00 PM}
+     * @param dateTime Date and time to display.
+     * @return Value such as {@code Dec 2 2019, 6:00 PM}.
      */
     public static String formatForDisplay(LocalDateTime dateTime) {
         if (dateTime.toLocalTime().equals(LocalTime.MIDNIGHT)) {
@@ -69,8 +69,8 @@ public final class DateTimeFormats {
     /**
      * Formats a date and time in a locale-independent form for persistent storage.
      *
-     * @param dateTime date and time to store
-     * @return value such as {@code 2019-12-02T18:00}
+     * @param dateTime Date and time to store.
+     * @return Value such as {@code 2019-12-02T18:00}.
      */
     public static String formatForStorage(LocalDateTime dateTime) {
         return dateTime.format(STORAGE_FORMAT);
@@ -79,9 +79,9 @@ public final class DateTimeFormats {
     /**
      * Parses the stable date-time representation written to persistent storage.
      *
-     * @param value stored date and time
-     * @return parsed date and time
-     * @throws DateTimeParseException if the stored value is malformed
+     * @param value Stored date and time.
+     * @return Parsed date and time.
+     * @throws DateTimeParseException If the stored value is malformed.
      */
     public static LocalDateTime parseStorageDateTime(String value) {
         return LocalDateTime.parse(value, STORAGE_FORMAT);

@@ -20,7 +20,7 @@ public class TaskList {
     /**
      * Creates a task list containing a copy of the supplied tasks.
      *
-     * @param tasks initial tasks in display order
+     * @param tasks Initial tasks in display order.
      */
     public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
@@ -29,7 +29,7 @@ public class TaskList {
     /**
      * Adds a task at the end of the list.
      *
-     * @param task task to add
+     * @param task Task to add.
      */
     public void add(Task task) {
         tasks.add(task);
@@ -38,8 +38,8 @@ public class TaskList {
     /**
      * Restores a task at a specific position, such as after a failed save.
      *
-     * @param index zero-based position at which to insert the task
-     * @param task task to insert
+     * @param index Zero-based position at which to insert the task.
+     * @param task Task to insert.
      */
     public void add(int index, Task task) {
         tasks.add(index, task);
@@ -48,8 +48,8 @@ public class TaskList {
     /**
      * Returns the task at a specific position.
      *
-     * @param index zero-based task position
-     * @return task at the requested position
+     * @param index Zero-based task position.
+     * @return Task at the requested position.
      */
     public Task get(int index) {
         return tasks.get(index);
@@ -58,8 +58,8 @@ public class TaskList {
     /**
      * Removes and returns the task at a specific position.
      *
-     * @param index zero-based task position
-     * @return removed task
+     * @param index Zero-based task position.
+     * @return Removed task.
      */
     public Task remove(int index) {
         return tasks.remove(index);
@@ -68,7 +68,7 @@ public class TaskList {
     /**
      * Marks the task at a specific position as completed.
      *
-     * @param index zero-based task position
+     * @param index Zero-based task position.
      */
     public void mark(int index) {
         tasks.get(index).markAsDone();
@@ -77,7 +77,7 @@ public class TaskList {
     /**
      * Marks the task at a specific position as incomplete.
      *
-     * @param index zero-based task position
+     * @param index Zero-based task position.
      */
     public void unmark(int index) {
         tasks.get(index).markAsUndone();
@@ -86,7 +86,7 @@ public class TaskList {
     /**
      * Returns the current number of tasks.
      *
-     * @return number of tasks in the list
+     * @return Number of tasks in the list.
      */
     public int size() {
         return tasks.size();
@@ -95,7 +95,7 @@ public class TaskList {
     /**
      * Provides a read-only view for displaying or saving the current tasks.
      *
-     * @return unmodifiable task view in display order
+     * @return Unmodifiable task view in display order.
      */
     public List<Task> asList() {
         return Collections.unmodifiableList(tasks);
