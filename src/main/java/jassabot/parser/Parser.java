@@ -34,6 +34,8 @@ public final class Parser {
             return CommandType.UNMARK;
         } else if (command.equals("delete") || command.startsWith("delete ")) {
             return CommandType.DELETE;
+        } else if (command.equals("find") || command.startsWith("find ")) {
+            return CommandType.FIND;
         } else if (command.equals("deadline") || command.startsWith("deadline ")) {
             return CommandType.DEADLINE;
         } else if (command.equals("event") || command.startsWith("event ")) {

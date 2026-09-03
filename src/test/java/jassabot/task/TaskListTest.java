@@ -66,6 +66,31 @@ public class TaskListTest {
     }
 
     @Test
+    public void find_mixedCaseKeyword_returnsMatchingTasksInOriginalOrder() {
+        Todo firstMatch = new Todo("Read Book");
+        Todo nonMatch = new Todo("buy groceries");
+        Todo secondMatch = new Todo("return borrowed book");
+        TaskList tasks = new TaskList(List.of(firstMatch, nonMatch, secondMatch));
+
+        List<Task> matches = tasks.find("bOoK");
+
+        assertEquals(List.of(firstMatch, secondMatch), matches);
+    }
+
+    @Test
+    public void find_noMatchingDescription_returnsEmptyReadOnlyList() {
+        TaskList tasks = new TaskList(List.of(new Todo("read book")));
+
+        List<Task> matches = tasks.find("exercise");
+
+        assertAll(
+                () -> assertTrue(matches.isEmpty()),
+                () -> assertThrows(UnsupportedOperationException.class,
+                        () -> matches.add(new Todo("exercise")))
+        );
+    }
+
+    @Test
     public void asList_modificationAttempt_throwsUnsupportedOperationException() {
         TaskList tasks = new TaskList(List.of(new Todo("read book")));
         List<Task> readOnlyTasks = tasks.asList();

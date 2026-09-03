@@ -454,7 +454,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Try todo, deadline, event, list, mark, unmark, delete, or bye.
+   OOPS!!! I don't recognise that command. Try todo, deadline, event, list, mark, unmark, delete, find, or bye.
    ____________________________________________________________
    ```
 
@@ -624,6 +624,133 @@ Each case below is one fresh console session. After sending an input, compare th
    ```
 
 9. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+### TC-17 — Find tasks by description keyword
+
+**Aim:** Verify that `find` performs a case-insensitive substring search, keeps matching tasks in list order, handles no matches, and rejects a missing keyword.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   todo Read Book
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] Read Book
+   Now you have 1 tasks in the list.
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   deadline return book /by 2/12/2019 1800
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [D][ ] return book (by: Dec 2 2019, 6:00 PM)
+   Now you have 2 tasks in the list.
+   ____________________________________________________________
+   ```
+
+3. Input:
+
+   ```text
+   todo exercise
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] exercise
+   Now you have 3 tasks in the list.
+   ____________________________________________________________
+   ```
+
+4. Input:
+
+   ```text
+   mark 1
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Nice! I've marked this task as done:
+     [T][X] Read Book
+   ____________________________________________________________
+   ```
+
+5. Input:
+
+   ```text
+   find BOOK
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the matching tasks in your list:
+   1.[T][X] Read Book
+   2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
+   ____________________________________________________________
+   ```
+
+6. Input:
+
+   ```text
+   find groceries
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the matching tasks in your list:
+   ____________________________________________________________
+   ```
+
+7. Input:
+
+   ```text
+   find
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! Please enter a keyword to find.
+   ____________________________________________________________
+   ```
+
+8. Input:
 
    ```text
    bye

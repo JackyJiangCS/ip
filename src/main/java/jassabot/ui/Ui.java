@@ -79,10 +79,30 @@ public class Ui {
      */
     public void showTaskList(List<Task> tasks) {
         System.out.println("Here are the tasks in your list:");
+        showNumberedTasks(tasks);
+        System.out.println(DIVIDER);
+    }
+
+    /**
+     * Displays tasks whose descriptions matched a search keyword.
+     *
+     * @param tasks matching tasks in their original list order
+     */
+    public void showMatchingTasks(List<Task> tasks) {
+        System.out.println("Here are the matching tasks in your list:");
+        showNumberedTasks(tasks);
+        System.out.println(DIVIDER);
+    }
+
+    /**
+     * Displays tasks as a one-based numbered list.
+     *
+     * @param tasks tasks to display in the supplied order
+     */
+    private void showNumberedTasks(List<Task> tasks) {
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + "." + tasks.get(i));
         }
-        System.out.println(DIVIDER);
     }
 
     /**
