@@ -87,6 +87,12 @@ public final class DateTimeFormats {
         return LocalDateTime.parse(value, STORAGE_FORMAT);
     }
 
+    /**
+     * Creates a locale-independent formatter that rejects invalid calendar dates.
+     *
+     * @param pattern Pattern used to parse and format dates.
+     * @return Strict date-time formatter for the pattern.
+     */
     private static DateTimeFormatter strictFormatter(String pattern) {
         return DateTimeFormatter.ofPattern(pattern, Locale.ENGLISH)
                 .withResolverStyle(ResolverStyle.STRICT);
