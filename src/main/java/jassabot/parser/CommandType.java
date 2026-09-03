@@ -1,3 +1,5 @@
+package jassabot.parser;
+
 /**
  * Represents a command supported by JassaBot.
  */

@@ -1,5 +1,19 @@
+package jassabot;
+
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+
+import jassabot.exception.JassaBotException;
+import jassabot.parser.CommandType;
+import jassabot.parser.Parser;
+import jassabot.storage.Storage;
+import jassabot.storage.StorageException;
+import jassabot.task.Deadline;
+import jassabot.task.Event;
+import jassabot.task.Task;
+import jassabot.task.TaskList;
+import jassabot.task.Todo;
+import jassabot.ui.Ui;
 
 /**
  * Starts the JassaBot chatbot application.

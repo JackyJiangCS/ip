@@ -7,8 +7,8 @@ Use Java 25. Compile into an ignored temporary directory and start a fresh proce
 ```powershell
 $uiTestClasses = Join-Path $env:TEMP 'jassabot-ui-test-classes'
 Remove-Item -Recurse -Force $uiTestClasses -ErrorAction SilentlyContinue
-javac -d $uiTestClasses src\main\java\*.java
-java -cp $uiTestClasses JassaBot
+javac -d $uiTestClasses (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+java -cp $uiTestClasses jassabot.JassaBot
 ```
 
 Before each test case, remove the saved task-data path so every session starts with the same hard-disk state. The path check keeps the recursive cleanup inside the repository's `data` directory:
