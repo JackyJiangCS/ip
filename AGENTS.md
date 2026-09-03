@@ -45,6 +45,10 @@ After each code update, review `test/ui-test-plan.md` and update it whenever the
 
 ## Git
 
+For every task that proposes, creates, or amends a commit or names a branch,
+load and follow the project-specific `$seedu-git-standard` skill at
+`.codex/skills/seedu-git-standard/SKILL.md`. Every future commit in this
+repository must comply with that skill.
+
 Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
