@@ -25,7 +25,7 @@ public class JassaBot {
     /**
      * Creates a chatbot that stores tasks at the given relative file path.
      *
-     * @param filePath relative path of the task data file
+     * @param filePath relative path of the task data file.
      */
     public JassaBot(Path filePath) {
         storage = new Storage(filePath);
@@ -35,7 +35,7 @@ public class JassaBot {
     /**
      * Runs the chatbot, storing entered tasks, listing them on request, and exiting when the user enters {@code bye}.
      *
-     * @param args command-line arguments, which are not used
+     * @param args command-line arguments, which are not used.
      */
     public static void main(String[] args) {
         new JassaBot(Path.of("data", "jassabot.txt")).run();
@@ -61,21 +61,21 @@ public class JassaBot {
                 }
                 CommandType commandType = Parser.parseCommandType(command);
                 switch (commandType) {
-                case BYE -> {
-                    ui.showGoodbye();
-                    return;
-                }
-                case LIST -> showTaskList(tasks);
-                case MARK -> markTask(command, tasks);
-                case UNMARK -> unmarkTask(command, tasks);
-                case DELETE -> deleteTask(command, tasks);
-                case FIND -> findTasks(command, tasks);
-                case DEADLINE -> addDeadline(command, tasks);
-                case EVENT -> addEvent(command, tasks);
-                case TODO -> addTodo(command, tasks);
-                case UNKNOWN -> throw new JassaBotException(
-                        "I don't recognise that command. Try todo, deadline, event, list, mark, "
-                                + "unmark, delete, find, or bye.");
+                    case BYE -> {
+                        ui.showGoodbye();
+                        return;
+                    }
+                    case LIST -> showTaskList(tasks);
+                    case MARK -> markTask(command, tasks);
+                    case UNMARK -> unmarkTask(command, tasks);
+                    case DELETE -> deleteTask(command, tasks);
+                    case FIND -> findTasks(command, tasks);
+                    case DEADLINE -> addDeadline(command, tasks);
+                    case EVENT -> addEvent(command, tasks);
+                    case TODO -> addTodo(command, tasks);
+                    default -> throw new JassaBotException(
+                            "I don't recognise that command. Try todo, deadline, event, list, mark, "
+                                    + "unmark, delete, find, or bye.");
                 }
             } catch (JassaBotException e) {
                 ui.showError(e.getMessage());
@@ -88,7 +88,7 @@ public class JassaBot {
     /**
      * Displays every task in its current list position.
      *
-     * @param tasks tasks currently stored by the application
+     * @param tasks tasks currently stored by the application.
      */
     private void showTaskList(TaskList tasks) {
         ui.showTaskList(tasks.asList());
@@ -97,9 +97,9 @@ public class JassaBot {
     /**
      * Displays tasks whose descriptions contain the keyword from a user command.
      *
-     * @param command complete find command entered by the user
-     * @param tasks tasks currently stored by the application
-     * @throws JassaBotException if no search keyword was supplied
+     * @param command complete find command entered by the user.
+     * @param tasks tasks currently stored by the application.
+     * @throws JassaBotException if no search keyword was supplied.
      */
     private void findTasks(String command, TaskList tasks) throws JassaBotException {
         String keyword = command.substring("find".length()).trim();
@@ -112,9 +112,9 @@ public class JassaBot {
     /**
      * Marks the task selected by a user command as completed.
      *
-     * @param command complete mark command entered by the user
-     * @param tasks tasks currently stored by the application
-     * @throws JassaBotException if the task number is invalid or the changed list cannot be saved
+     * @param command complete mark command entered by the user.
+     * @param tasks tasks currently stored by the application.
+     * @throws JassaBotException if the task number is invalid or the changed list cannot be saved.
      */
     private void markTask(String command, TaskList tasks) throws JassaBotException {
         String number = command.substring("mark".length()).trim();
@@ -141,9 +141,9 @@ public class JassaBot {
     /**
      * Marks the task selected by a user command as incomplete.
      *
-     * @param command complete unmark command entered by the user
-     * @param tasks tasks currently stored by the application
-     * @throws JassaBotException if the task number is invalid or the changed list cannot be saved
+     * @param command complete unmark command entered by the user.
+     * @param tasks tasks currently stored by the application.
+     * @throws JassaBotException if the task number is invalid or the changed list cannot be saved.
      */
     private void unmarkTask(String command, TaskList tasks) throws JassaBotException {
         String number = command.substring("unmark".length()).trim();
@@ -170,9 +170,9 @@ public class JassaBot {
     /**
      * Deletes the task selected by a user command.
      *
-     * @param command complete delete command entered by the user
-     * @param tasks tasks currently stored by the application
-     * @throws JassaBotException if the task number is invalid or the changed list cannot be saved
+     * @param command complete delete command entered by the user.
+     * @param tasks tasks currently stored by the application.
+     * @throws JassaBotException if the task number is invalid or the changed list cannot be saved.
      */
     private void deleteTask(String command, TaskList tasks) throws JassaBotException {
         String number = command.substring("delete".length()).trim();
@@ -195,9 +195,9 @@ public class JassaBot {
     /**
      * Validates a deadline command and adds the resulting task.
      *
-     * @param command complete deadline command entered by the user
-     * @param tasks tasks currently stored by the application
-     * @throws JassaBotException if the description, due-time marker, or date is invalid
+     * @param command complete deadline command entered by the user.
+     * @param tasks tasks currently stored by the application.
+     * @throws JassaBotException if the description, due-time marker, or date is invalid.
      */
     private void addDeadline(String command, TaskList tasks)
             throws JassaBotException {
@@ -231,9 +231,9 @@ public class JassaBot {
     /**
      * Validates an event command and adds the resulting task.
      *
-     * @param command complete event command entered by the user
-     * @param tasks tasks currently stored by the application
-     * @throws JassaBotException if the description, time markers, or dates are invalid
+     * @param command complete event command entered by the user.
+     * @param tasks tasks currently stored by the application.
+     * @throws JassaBotException if the description, time markers, or dates are invalid.
      */
     private void addEvent(String command, TaskList tasks)
             throws JassaBotException {
@@ -272,9 +272,9 @@ public class JassaBot {
     /**
      * Validates a todo command and adds the resulting task.
      *
-     * @param command complete todo command entered by the user
-     * @param tasks tasks currently stored by the application
-     * @throws JassaBotException if the description is missing
+     * @param command complete todo command entered by the user.
+     * @param tasks tasks currently stored by the application.
+     * @throws JassaBotException if the description is missing.
      */
     private void addTodo(String command, TaskList tasks)
             throws JassaBotException {
@@ -297,9 +297,9 @@ public class JassaBot {
     /**
      * Finds a command marker only when it ends at whitespace or at the end of the command.
      *
-     * @param command complete user command
-     * @param marker marker including its required leading space
-     * @return index of the marker, or {@code -1} if it is absent
+     * @param command complete user command.
+     * @param marker marker including its required leading space.
+     * @return index of the marker, or {@code -1} if it is absent.
      */
     private static int findMarker(String command, String marker) {
         int searchFrom = 0;
@@ -321,7 +321,7 @@ public class JassaBot {
     /**
      * Creates the shared user-facing error used after a failed transactional save.
      *
-     * @return save error that explains the rollback
+     * @return save error that explains the rollback.
      */
     private static JassaBotException createSaveException() {
         return new JassaBotException(
@@ -331,9 +331,9 @@ public class JassaBot {
     /**
      * Converts a user-entered, one-based task number into a valid array index.
      *
-     * @param number the task number entered by the user
-     * @param numberOfTasks the number of tasks currently stored
-     * @return the zero-based task index, or {@code -1} if the number is invalid
+     * @param number the task number entered by the user.
+     * @param numberOfTasks the number of tasks currently stored.
+     * @return the zero-based task index, or {@code -1} if the number is invalid.
      */
     private static int getTaskIndex(String number, int numberOfTasks) {
         try {

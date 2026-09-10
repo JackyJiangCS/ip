@@ -23,14 +23,14 @@ public class DateTimeFormatsTest {
 
     @Test
     public void formatForDisplay_nonMidnight_usesFriendlyTwelveHourTime() {
-        assertAll(
-                () -> assertEquals("Dec 2 2019, 12:01 AM",
+        assertAll(() ->
+                assertEquals("Dec 2 2019, 12:01 AM",
                         DateTimeFormats.formatForDisplay(
-                                LocalDateTime.of(2019, 12, 2, 0, 1))),
-                () -> assertEquals("Dec 2 2019, 12:00 PM",
+                                LocalDateTime.of(2019, 12, 2, 0, 1))), () ->
+                assertEquals("Dec 2 2019, 12:00 PM",
                         DateTimeFormats.formatForDisplay(
-                                LocalDateTime.of(2019, 12, 2, 12, 0))),
-                () -> assertEquals("Dec 2 2019, 11:59 PM",
+                                LocalDateTime.of(2019, 12, 2, 12, 0))), () ->
+                assertEquals("Dec 2 2019, 11:59 PM",
                         DateTimeFormats.formatForDisplay(
                                 LocalDateTime.of(2019, 12, 2, 23, 59)))
         );
@@ -42,22 +42,22 @@ public class DateTimeFormatsTest {
 
         String storedValue = DateTimeFormats.formatForStorage(dateTime);
 
-        assertAll(
-                () -> assertEquals("2024-02-29T18:05", storedValue),
-                () -> assertEquals(dateTime,
+        assertAll(() ->
+                assertEquals("2024-02-29T18:05", storedValue), () ->
+                assertEquals(dateTime,
                         DateTimeFormats.parseStorageDateTime(storedValue))
         );
     }
 
     @Test
     public void parseStorageDateTime_malformedValue_throwsDateTimeParseException() {
-        assertAll(
-                () -> assertThrows(DateTimeParseException.class,
-                        () -> DateTimeFormats.parseStorageDateTime("2024-02-29 18:05")),
-                () -> assertThrows(DateTimeParseException.class,
-                        () -> DateTimeFormats.parseStorageDateTime("2023-02-29T18:05")),
-                () -> assertThrows(DateTimeParseException.class,
-                        () -> DateTimeFormats.parseStorageDateTime("2024-02-29T24:00"))
+        assertAll(() ->
+                assertThrows(DateTimeParseException.class, () ->
+                        DateTimeFormats.parseStorageDateTime("2024-02-29 18:05")), () ->
+                assertThrows(DateTimeParseException.class, () ->
+                        DateTimeFormats.parseStorageDateTime("2023-02-29T18:05")), () ->
+                assertThrows(DateTimeParseException.class, () ->
+                        DateTimeFormats.parseStorageDateTime("2024-02-29T24:00"))
         );
     }
 }

@@ -53,8 +53,8 @@ public class StorageTest {
 
     @Test
     public void constructor_absolutePath_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Storage(testDirectory.toAbsolutePath().resolve("tasks.txt")));
+        assertThrows(IllegalArgumentException.class, () ->
+                new Storage(testDirectory.toAbsolutePath().resolve("tasks.txt")));
     }
 
     @Test
@@ -63,9 +63,9 @@ public class StorageTest {
 
         Storage.LoadResult result = storage.loadTasks();
 
-        assertAll(
-                () -> assertTrue(result.getTasks().isEmpty()),
-                () -> assertTrue(result.getWarnings().isEmpty())
+        assertAll(() ->
+                assertTrue(result.getTasks().isEmpty()), () ->
+                assertTrue(result.getWarnings().isEmpty())
         );
     }
 
@@ -90,12 +90,12 @@ public class StorageTest {
                 "T | 1 | compare A \\| B \\\\ C",
                 "D | 0 | return book | 2019-12-02T18:00",
                 "E | 0 | meeting | 2019-12-02T14:00 | 2019-12-02T16:00");
-        assertAll(
-                () -> assertEquals(expectedLines,
-                        Files.readAllLines(dataFile, StandardCharsets.UTF_8)),
-                () -> assertEquals(expectedLines,
-                        result.getTasks().stream().map(Task::toDataString).toList()),
-                () -> assertTrue(result.getWarnings().isEmpty())
+        assertAll(() ->
+                assertEquals(expectedLines,
+                        Files.readAllLines(dataFile, StandardCharsets.UTF_8)), () ->
+                assertEquals(expectedLines,
+                        result.getTasks().stream().map(Task::toDataString).toList()), () ->
+                assertTrue(result.getWarnings().isEmpty())
         );
     }
 
@@ -132,13 +132,13 @@ public class StorageTest {
 
         Storage.LoadResult result = storage.loadTasks();
 
-        assertAll(
-                () -> assertEquals(2, result.getTasks().size()),
-                () -> assertEquals("T | 1 | valid todo",
-                        result.getTasks().get(0).toDataString()),
-                () -> assertEquals("legacy \\q",
-                        result.getTasks().get(1).getDescription()),
-                () -> assertEquals(List.of(
+        assertAll(() ->
+                assertEquals(2, result.getTasks().size()), () ->
+                assertEquals("T | 1 | valid todo",
+                        result.getTasks().get(0).toDataString()), () ->
+                assertEquals("legacy \\q",
+                        result.getTasks().get(1).getDescription()), () ->
+                assertEquals(List.of(
                         "Skipped data line 3: unknown task type 'X'.",
                         "Skipped data line 4: task type 'T' expects 3 fields but found 4.",
                         "Skipped data line 5: status must be 0 or 1.",
@@ -162,9 +162,9 @@ public class StorageTest {
 
         Storage.LoadResult result = storage.loadTasks();
 
-        assertAll(
-                () -> assertTrue(result.getTasks().isEmpty()),
-                () -> assertEquals(List.of(
+        assertAll(() ->
+                assertTrue(result.getTasks().isEmpty()), () ->
+                assertEquals(List.of(
                         "The task data path is not a regular file. "
                                 + "Starting with an empty task list."),
                         result.getWarnings())
@@ -177,13 +177,13 @@ public class StorageTest {
         Files.writeString(parentFile, "content", StandardCharsets.UTF_8);
         Storage storage = new Storage(parentFile.resolve("tasks.txt"));
 
-        StorageException exception = assertThrows(StorageException.class,
-                () -> storage.saveTasks(List.of(new Todo("read book"))));
+        StorageException exception = assertThrows(StorageException.class, () ->
+                storage.saveTasks(List.of(new Todo("read book"))));
 
-        assertAll(
-                () -> assertEquals("The task data file could not be written.",
-                        exception.getMessage()),
-                () -> assertNotNull(exception.getCause())
+        assertAll(() ->
+                assertEquals("The task data file could not be written.",
+                        exception.getMessage()), () ->
+                assertNotNull(exception.getCause())
         );
     }
 }

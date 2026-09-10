@@ -25,9 +25,9 @@ public class TaskListTest {
         TaskList tasks = new TaskList(source);
         source.clear();
 
-        assertAll(
-                () -> assertEquals(1, tasks.size()),
-                () -> assertSame(originalTask, tasks.get(0))
+        assertAll(() ->
+                assertEquals(1, tasks.size()), () ->
+                assertSame(originalTask, tasks.get(0))
         );
     }
 
@@ -43,10 +43,10 @@ public class TaskListTest {
         tasks.add(1, middle);
         Task removed = tasks.remove(1);
 
-        assertAll(
-                () -> assertSame(middle, removed),
-                () -> assertEquals(List.of(first, last), tasks.asList()),
-                () -> assertEquals(2, tasks.size())
+        assertAll(() ->
+                assertSame(middle, removed), () ->
+                assertEquals(List.of(first, last), tasks.asList()), () ->
+                assertEquals(2, tasks.size())
         );
     }
 
@@ -57,9 +57,9 @@ public class TaskListTest {
         TaskList tasks = new TaskList(List.of(first, second));
 
         tasks.mark(1);
-        assertAll(
-                () -> assertFalse(first.isDone()),
-                () -> assertTrue(second.isDone())
+        assertAll(() ->
+                assertFalse(first.isDone()), () ->
+                assertTrue(second.isDone())
         );
         tasks.unmark(1);
         assertFalse(second.isDone());
@@ -83,10 +83,10 @@ public class TaskListTest {
 
         List<Task> matches = tasks.find("exercise");
 
-        assertAll(
-                () -> assertTrue(matches.isEmpty()),
-                () -> assertThrows(UnsupportedOperationException.class,
-                        () -> matches.add(new Todo("exercise")))
+        assertAll(() ->
+                assertTrue(matches.isEmpty()), () ->
+                assertThrows(UnsupportedOperationException.class, () ->
+                        matches.add(new Todo("exercise")))
         );
     }
 
@@ -95,7 +95,7 @@ public class TaskListTest {
         TaskList tasks = new TaskList(List.of(new Todo("read book")));
         List<Task> readOnlyTasks = tasks.asList();
 
-        assertThrows(UnsupportedOperationException.class,
-                () -> readOnlyTasks.add(new Todo("write report")));
+        assertThrows(UnsupportedOperationException.class, () ->
+                readOnlyTasks.add(new Todo("write report")));
     }
 }
