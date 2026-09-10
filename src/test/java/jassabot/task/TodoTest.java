@@ -18,14 +18,14 @@ public class TodoTest {
 
         assertFalse(todo.isDone());
         todo.markAsDone();
-        assertAll(
-                () -> assertTrue(todo.isDone()),
-                () -> assertEquals("X", todo.getStatusIcon())
+        assertAll(() ->
+                assertTrue(todo.isDone()), () ->
+                assertEquals("X", todo.getStatusIcon())
         );
         todo.markAsUndone();
-        assertAll(
-                () -> assertFalse(todo.isDone()),
-                () -> assertEquals(" ", todo.getStatusIcon())
+        assertAll(() ->
+                assertFalse(todo.isDone()), () ->
+                assertEquals(" ", todo.getStatusIcon())
         );
     }
 
