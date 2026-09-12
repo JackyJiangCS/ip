@@ -2,6 +2,7 @@ package jassabot;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jassabot.exception.JassaBotException;
 import jassabot.parser.CommandType;
@@ -22,6 +23,12 @@ public class JassaBot {
     private final Storage storage;
     private final Ui ui;
 
+    private final TaskList tasks;
+    private final List<String> loadingWarnings;
+    private final StringBuilder response = new StringBuilder();
+    private CommandType commandType = CommandType.UNKNOWN;
+    private boolean isExitRequested;
+
     /**
      * Creates a chatbot that stores tasks at the given relative file path.
      *
@@ -29,7 +36,10 @@ public class JassaBot {
      */
     public JassaBot(Path filePath) {
         storage = new Storage(filePath);
-        ui = new Ui();
+        ui = new Ui(line -> response.append(line).append("\n"));
+        Storage.LoadResult loadResult = storage.loadTasks();
+        tasks = new TaskList(loadResult.getTasks());
+        loadingWarnings = loadResult.getWarnings();
     }
 
     /**
@@ -45,44 +55,16 @@ public class JassaBot {
      * Runs the command loop until the user exits or closes the input stream.
      */
     public void run() {
-        Storage.LoadResult loadResult = storage.loadTasks();
-        TaskList tasks = new TaskList(loadResult.getTasks());
+        Ui console = new Ui();
+        console.showWelcome();
+        console.showLoadingWarnings(loadingWarnings);
 
-        ui.showWelcome();
-        ui.showLoadingWarnings(loadResult.getWarnings());
-
-        while (ui.hasNextCommand()) {
-            String command = ui.readCommand();
-            ui.showResponseStart();
-
-            try {
-                if (command.isEmpty()) {
-                    throw new JassaBotException("Please enter a command.");
-                }
-                CommandType commandType = Parser.parseCommandType(command);
-                switch (commandType) {
-                    case BYE -> {
-                        ui.showGoodbye();
-                        return;
-                    }
-                    case LIST -> showTaskList(tasks);
-                    case MARK -> markTask(command, tasks);
-                    case UNMARK -> unmarkTask(command, tasks);
-                    case DELETE -> deleteTask(command, tasks);
-                    case FIND -> findTasks(command, tasks);
-                    case DEADLINE -> addDeadline(command, tasks);
-                    case EVENT -> addEvent(command, tasks);
-                    case TODO -> addTodo(command, tasks);
-                    default -> throw new JassaBotException(
-                            "I don't recognise that command. Try todo, deadline, event, list, mark, "
-                                    + "unmark, delete, find, or bye.");
-                }
-            } catch (JassaBotException e) {
-                ui.showError(e.getMessage());
-            }
+        while (!isExitRequested && console.hasNextCommand()) {
+            console.showResponse(getResponse(console.readCommand()));
         }
-
-        ui.showInputClosed();
+        if (!isExitRequested) {
+            console.showInputClosed();
+        }
     }
 
     /**
@@ -120,6 +102,7 @@ public class JassaBot {
         String number = command.substring("mark".length()).trim();
         int index = getTaskIndex(number, tasks.size());
         if (index == -1) {
+            commandType = CommandType.UNKNOWN;
             ui.showInvalidTaskNumber();
             return;
         }
@@ -149,6 +132,7 @@ public class JassaBot {
         String number = command.substring("unmark".length()).trim();
         int index = getTaskIndex(number, tasks.size());
         if (index == -1) {
+            commandType = CommandType.UNKNOWN;
             ui.showInvalidTaskNumber();
             return;
         }
@@ -178,6 +162,7 @@ public class JassaBot {
         String number = command.substring("delete".length()).trim();
         int index = getTaskIndex(number, tasks.size());
         if (index == -1) {
+            commandType = CommandType.UNKNOWN;
             ui.showInvalidTaskNumber();
             return;
         }
@@ -345,5 +330,67 @@ public class JassaBot {
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    /**
+     * Executes one command using the same task list and storage in either interface.
+     * Returns display text without reading standard input or printing to the console.
+     *
+     * @param input Complete user input, including any surrounding whitespace.
+     * @return Confirmation or recoverable error message.
+     */
+    public String getResponse(String input) {
+        response.setLength(0);
+        commandType = CommandType.UNKNOWN;
+        if (isExitRequested) {
+            ui.showGoodbye();
+            return response.toString().stripTrailing();
+        }
+        String command = input.trim();
+        try {
+            if (command.isEmpty()) {
+                throw new JassaBotException("Please enter a command.");
+            }
+            commandType = Parser.parseCommandType(command);
+            switch (commandType) {
+                case BYE -> {
+                    isExitRequested = true;
+                    ui.showGoodbye();
+                }
+                case LIST -> showTaskList(tasks);
+                case MARK -> markTask(command, tasks);
+                case UNMARK -> unmarkTask(command, tasks);
+                case DELETE -> deleteTask(command, tasks);
+                case FIND -> findTasks(command, tasks);
+                case DEADLINE -> addDeadline(command, tasks);
+                case EVENT -> addEvent(command, tasks);
+                case TODO -> addTodo(command, tasks);
+                default -> throw new JassaBotException(
+                        "I don't recognise that command. Try todo, deadline, event, list, mark, "
+                                + "unmark, delete, find, or bye.");
+            }
+        } catch (JassaBotException e) {
+            commandType = CommandType.UNKNOWN;
+            ui.showError(e.getMessage());
+        }
+        return response.toString().stripTrailing();
+    }
+
+    /**
+     * Returns the GUI greeting together with any warnings from loading saved tasks.
+     */
+    public String getWelcome() {
+        response.setLength(0);
+        ui.showWelcome();
+        ui.showLoadingWarnings(loadingWarnings);
+        return response.toString().stripTrailing();
+    }
+
+    public CommandType getCommandType() {
+        return commandType;
+    }
+
+    public boolean isExitRequested() {
+        return isExitRequested;
     }
 }

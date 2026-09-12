@@ -5,23 +5,17 @@
 Use Java 25. Compile into an ignored temporary directory and start a fresh process for each test case:
 
 ```powershell
-$uiTestClasses = Join-Path $env:TEMP 'jassabot-ui-test-classes'
-Remove-Item -Recurse -Force $uiTestClasses -ErrorAction SilentlyContinue
-javac -d $uiTestClasses (Get-ChildItem -Recurse -Filter *.java src\main\java).FullName
+.\gradlew.bat classes
+$uiTestClasses = Join-Path (Get-Location) 'build/classes/java/main'
 java -cp $uiTestClasses jassabot.JassaBot
 ```
 
-Before each test case, remove the saved task-data path so every session starts with the same hard-disk state. The path check keeps the recursive cleanup inside the repository's `data` directory:
+Start each case in a fresh temporary working directory so tests never overwrite your own saved tasks.
+Use the absolute class path from above when starting the process there. All data paths below are
+relative to that case's working directory.
 
-```powershell
-$projectRoot = [IO.Path]::GetFullPath((Get-Location).Path)
-$expectedDataDirectory = [IO.Path]::GetFullPath((Join-Path $projectRoot 'data'))
-$taskDataPath = [IO.Path]::GetFullPath((Join-Path $expectedDataDirectory 'jassabot.txt'))
-if ([IO.Path]::GetDirectoryName($taskDataPath) -ne $expectedDataDirectory) {
-    throw "Unexpected task-data path: $taskDataPath"
-}
-Remove-Item -Recurse -Force -LiteralPath $taskDataPath -ErrorAction SilentlyContinue
-```
+The interactive console is also available with `.\gradlew.bat --console=plain runConsole`.
+The default `.\gradlew.bat run` starts the GUI; it uses the same commands and storage format.
 
 Storage-file blocks have the following meanings:
 
