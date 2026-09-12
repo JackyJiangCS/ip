@@ -2,11 +2,12 @@ package jassabot.ui;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 import jassabot.task.Task;
 
 /**
- * Handles all console input and output for JassaBot.
+ * Formats shared messages for the console or a GUI response collector.
  */
 public class Ui {
     private static final String DIVIDER =
@@ -18,12 +19,38 @@ public class Ui {
             + " _|_|\\__,_|___/___/\\__,_|   |____/ \\___/ \\__|";
 
     private final Scanner scanner;
+    private final Consumer<String> output;
+    private final boolean hasConsoleDecorations;
 
     /**
      * Creates a UI connected to the process's standard input.
      */
     public Ui() {
         scanner = new Scanner(System.in);
+        output = System.out::println;
+        hasConsoleDecorations = true;
+    }
+
+    /**
+     * Creates a message formatter that sends plain response lines to a GUI collector.
+     *
+     * @param output Destination for each formatted line.
+     */
+    public Ui(Consumer<String> output) {
+        scanner = new Scanner("");
+        this.output = output;
+        hasConsoleDecorations = false;
+    }
+
+    /**
+     * Displays a complete command response with the console's original dividers.
+     *
+     * @param response Message returned by the chatbot.
+     */
+    public void showResponse(String response) {
+        showResponseStart();
+        output.accept(response);
+        showResponseStart();
     }
 
     /**
@@ -46,11 +73,13 @@ public class Ui {
 
     /** Displays the application banner and greeting. */
     public void showWelcome() {
-        System.out.println(DIVIDER);
-        System.out.println(BANNER);
-        System.out.println("Hello! I'm JassaBot.");
-        System.out.println("What can I do for you?");
-        System.out.println(DIVIDER);
+        showResponseStart();
+        if (hasConsoleDecorations) {
+            output.accept(BANNER);
+        }
+        output.accept("Hello! I'm JassaBot.");
+        output.accept("What can I do for you?");
+        showResponseStart();
     }
 
     /**
@@ -60,16 +89,18 @@ public class Ui {
      */
     public void showLoadingWarnings(List<String> warnings) {
         for (String warning : warnings) {
-            System.out.println("WARNING: " + warning);
+            output.accept("WARNING: " + warning);
         }
         if (!warnings.isEmpty()) {
-            System.out.println(DIVIDER);
+            showResponseStart();
         }
     }
 
     /** Displays the divider that begins a response to a command. */
     public void showResponseStart() {
-        System.out.println(DIVIDER);
+        if (hasConsoleDecorations) {
+            output.accept(DIVIDER);
+        }
     }
 
     /**
@@ -78,9 +109,9 @@ public class Ui {
      * @param tasks Tasks currently stored by the application.
      */
     public void showTaskList(List<Task> tasks) {
-        System.out.println("Here are the tasks in your list:");
+        output.accept("Here are the tasks in your list:");
         showNumberedTasks(tasks);
-        System.out.println(DIVIDER);
+        showResponseStart();
     }
 
     /**
@@ -89,9 +120,9 @@ public class Ui {
      * @param tasks matching tasks in their original list order
      */
     public void showMatchingTasks(List<Task> tasks) {
-        System.out.println("Here are the matching tasks in your list:");
+        output.accept("Here are the matching tasks in your list:");
         showNumberedTasks(tasks);
-        System.out.println(DIVIDER);
+        showResponseStart();
     }
 
     /**
@@ -101,7 +132,7 @@ public class Ui {
      */
     private void showNumberedTasks(List<Task> tasks) {
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
+            output.accept((i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -111,9 +142,9 @@ public class Ui {
      * @param task Task that was marked as completed.
      */
     public void showTaskMarked(Task task) {
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.println("  " + task);
-        System.out.println(DIVIDER);
+        output.accept("Nice! I've marked this task as done:");
+        output.accept("  " + task);
+        showResponseStart();
     }
 
     /**
@@ -122,9 +153,9 @@ public class Ui {
      * @param task Task that was marked as incomplete.
      */
     public void showTaskUnmarked(Task task) {
-        System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println("  " + task);
-        System.out.println(DIVIDER);
+        output.accept("OK, I've marked this task as not done yet:");
+        output.accept("  " + task);
+        showResponseStart();
     }
 
     /**
@@ -134,10 +165,10 @@ public class Ui {
      * @param numberOfTasks Number of tasks remaining in the list.
      */
     public void showTaskDeleted(Task task, int numberOfTasks) {
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
-        System.out.println(DIVIDER);
+        output.accept("Noted. I've removed this task:");
+        output.accept("  " + task);
+        output.accept("Now you have " + numberOfTasks + " tasks in the list.");
+        showResponseStart();
     }
 
     /**
@@ -147,16 +178,16 @@ public class Ui {
      * @param numberOfTasks Number of tasks now in the list.
      */
     public void showTaskAdded(Task task, int numberOfTasks) {
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
-        System.out.println(DIVIDER);
+        output.accept("Got it. I've added this task:");
+        output.accept("  " + task);
+        output.accept("Now you have " + numberOfTasks + " tasks in the list.");
+        showResponseStart();
     }
 
     /** Displays the shared invalid-task-number response. */
     public void showInvalidTaskNumber() {
-        System.out.println("Please enter a valid task number.");
-        System.out.println(DIVIDER);
+        output.accept("Please enter a valid task number.");
+        showResponseStart();
     }
 
     /**
@@ -165,20 +196,20 @@ public class Ui {
      * @param message User-facing explanation of the error.
      */
     public void showError(String message) {
-        System.out.println("OOPS!!! " + message);
-        System.out.println(DIVIDER);
+        output.accept("OOPS!!! " + message);
+        showResponseStart();
     }
 
     /** Displays the normal farewell requested by the {@code bye} command. */
     public void showGoodbye() {
-        System.out.println("Bye. Hope to see you again soon!");
-        System.out.println(DIVIDER);
+        output.accept("Bye. Hope to see you again soon!");
+        showResponseStart();
     }
 
     /** Displays the farewell used when the input stream closes. */
     public void showInputClosed() {
-        System.out.println(DIVIDER);
-        System.out.println("Input closed. Goodbye!");
-        System.out.println(DIVIDER);
+        showResponseStart();
+        output.accept("Input closed. Goodbye!");
+        showResponseStart();
     }
 }
