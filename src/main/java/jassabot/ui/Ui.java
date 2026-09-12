@@ -77,9 +77,19 @@ public class Ui {
         if (hasConsoleDecorations) {
             output.accept(BANNER);
         }
-        output.accept("Hello! I'm JassaBot.");
-        output.accept("What can I do for you?");
+        showLines("Hello! I'm JassaBot.", "What can I do for you?");
         showResponseStart();
+    }
+
+    /**
+     * Sends each message line to the configured output in order.
+     *
+     * @param lines Message lines to display.
+     */
+    private void showLines(String... lines) {
+        for (String line : lines) {
+            output.accept(line);
+        }
     }
 
     /**
@@ -142,8 +152,7 @@ public class Ui {
      * @param task Task that was marked as completed.
      */
     public void showTaskMarked(Task task) {
-        output.accept("Nice! I've marked this task as done:");
-        output.accept("  " + task);
+        showLines("Nice! I've marked this task as done:", "  " + task);
         showResponseStart();
     }
 
@@ -153,8 +162,7 @@ public class Ui {
      * @param task Task that was marked as incomplete.
      */
     public void showTaskUnmarked(Task task) {
-        output.accept("OK, I've marked this task as not done yet:");
-        output.accept("  " + task);
+        showLines("OK, I've marked this task as not done yet:", "  " + task);
         showResponseStart();
     }
 
@@ -165,9 +173,9 @@ public class Ui {
      * @param numberOfTasks Number of tasks remaining in the list.
      */
     public void showTaskDeleted(Task task, int numberOfTasks) {
-        output.accept("Noted. I've removed this task:");
-        output.accept("  " + task);
-        output.accept("Now you have " + numberOfTasks + " tasks in the list.");
+        showLines("Noted. I've removed this task:",
+                "  " + task,
+                "Now you have " + numberOfTasks + " tasks in the list.");
         showResponseStart();
     }
 
@@ -178,9 +186,9 @@ public class Ui {
      * @param numberOfTasks Number of tasks now in the list.
      */
     public void showTaskAdded(Task task, int numberOfTasks) {
-        output.accept("Got it. I've added this task:");
-        output.accept("  " + task);
-        output.accept("Now you have " + numberOfTasks + " tasks in the list.");
+        showLines("Got it. I've added this task:",
+                "  " + task,
+                "Now you have " + numberOfTasks + " tasks in the list.");
         showResponseStart();
     }
 
