@@ -48,10 +48,13 @@ public class JassaBotTest {
         assertEquals("Got it. I've added this task:\n  [T][ ] read book\n"
                 + "Now you have 1 tasks in the list.", bot.getResponse("  todo read book  "));
         assertEquals(CommandType.TODO, bot.getCommandType());
-        assertTrue(bot.getResponse("deadline return book /by 2019-12-02 1800")
-                .contains("[D][ ] return book (by: Dec 2 2019, 6:00 PM)"));
-        assertTrue(bot.getResponse("event meeting /from 2019-12-02 1400 /to 2019-12-02 1600")
-                .contains("[E][ ] meeting"));
+        assertEquals("Got it. I've added this task:\n  [D][ ] return book (by: Dec 2 2019, 6:00 PM)\n"
+                + "Now you have 2 tasks in the list.",
+                bot.getResponse("deadline return book /by 2019-12-02 1800"));
+        assertEquals("Got it. I've added this task:\n"
+                + "  [E][ ] meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)\n"
+                + "Now you have 3 tasks in the list.",
+                bot.getResponse("event meeting /from 2019-12-02 1400 /to 2019-12-02 1600"));
         assertTrue(bot.getResponse("mark 1").contains("[T][X] read book"));
         assertTrue(bot.getResponse("unmark 1").contains("[T][ ] read book"));
         assertEquals("Here are the matching tasks in your list:\n1.[T][ ] read book\n"
