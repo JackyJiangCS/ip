@@ -77,6 +77,16 @@ public class JassaBotTest {
     }
 
     @Test
+    public void getResponse_markerPrefixes_skipsPartialMatchesAndFindsCompleteMarkers() {
+        assertTrue(bot.getResponse("deadline compare /bypass /by 2019-12-02")
+                .contains("[D][ ] compare /bypass (by: Dec 2 2019)"));
+        assertTrue(bot.getResponse("event travel /fromage /together /from 2019-12-02 /to 2019-12-03")
+                .contains("[E][ ] travel /fromage /together"));
+        assertEquals("OOPS!!! A deadline needs '/by' followed by its due time.",
+                bot.getResponse("deadline compare /bypass"));
+    }
+
+    @Test
     public void getWelcome_malformedStorage_reportsWarningsAndLoadsValidTasks() throws IOException {
         Files.writeString(dataFile, "T | 1 | saved task\nX | 0 | invalid\n");
         bot = new JassaBot(dataFile);
