@@ -202,15 +202,7 @@ public class JassaBot {
         }
 
         LocalDateTime by = Parser.parseDateTime(byDateTimeText);
-        Deadline newDeadline = new Deadline(description, by);
-        tasks.add(newDeadline);
-        try {
-            storage.saveTasks(tasks.asList());
-        } catch (StorageException e) {
-            tasks.remove(tasks.size() - 1);
-            throw createSaveException();
-        }
-        ui.showTaskAdded(newDeadline, tasks.size());
+        addTask(new Deadline(description, by), tasks);
     }
 
     /**
@@ -243,15 +235,7 @@ public class JassaBot {
 
         LocalDateTime from = Parser.parseDateTime(fromDateTimeText);
         LocalDateTime to = Parser.parseDateTime(toDateTimeText);
-        Event newEvent = new Event(description, from, to);
-        tasks.add(newEvent);
-        try {
-            storage.saveTasks(tasks.asList());
-        } catch (StorageException e) {
-            tasks.remove(tasks.size() - 1);
-            throw createSaveException();
-        }
-        ui.showTaskAdded(newEvent, tasks.size());
+        addTask(new Event(description, from, to), tasks);
     }
 
     /**
@@ -268,15 +252,25 @@ public class JassaBot {
             throw new JassaBotException("The description of a todo cannot be empty.");
         }
 
-        Todo newTodo = new Todo(description);
-        tasks.add(newTodo);
+        addTask(new Todo(description), tasks);
+    }
+
+    /**
+     * Adds and saves a validated task, removing it again if persistence fails.
+     *
+     * @param task Task to add.
+     * @param tasks Tasks currently stored by the application.
+     * @throws JassaBotException If the changed list cannot be saved.
+     */
+    private void addTask(Task task, TaskList tasks) throws JassaBotException {
+        tasks.add(task);
         try {
             storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
             tasks.remove(tasks.size() - 1);
             throw createSaveException();
         }
-        ui.showTaskAdded(newTodo, tasks.size());
+        ui.showTaskAdded(task, tasks.size());
     }
 
     /**
