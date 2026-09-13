@@ -7,8 +7,10 @@ Use Java 25. Compile into an ignored temporary directory and start a fresh proce
 ```powershell
 .\gradlew.bat classes
 $uiTestClasses = Join-Path (Get-Location) 'build/classes/java/main'
-java -cp $uiTestClasses jassabot.JassaBot
+java -ea -cp $uiTestClasses jassabot.JassaBot
 ```
+
+The `-ea` option enables Java assertions so these cases also check internal assumptions.
 
 Start each case in a fresh temporary working directory so tests never overwrite your own saved tasks.
 Use the absolute class path from above when starting the process there. All data paths below are
