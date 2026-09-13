@@ -187,8 +187,8 @@ public class JassaBot {
     private void addDeadline(String command, TaskList tasks)
             throws JassaBotException {
         int byIndex = findMarker(command, " /by");
-        String description = byIndex == -1 ? command.substring(8).trim()
-                : command.substring(8, byIndex).trim();
+        String description = byIndex == -1 ? command.substring("deadline".length()).trim()
+                : command.substring("deadline".length(), byIndex).trim();
 
         if (description.isEmpty()) {
             throw new JassaBotException("The description of a deadline cannot be empty.");
@@ -216,8 +216,8 @@ public class JassaBot {
             throws JassaBotException {
         int fromIndex = findMarker(command, " /from");
         int toIndex = findMarker(command, " /to");
-        String description = fromIndex == -1 ? command.substring(5).trim()
-                : command.substring(5, fromIndex).trim();
+        String description = fromIndex == -1 ? command.substring("event".length()).trim()
+                : command.substring("event".length(), fromIndex).trim();
 
         if (description.isEmpty()) {
             throw new JassaBotException("The description of an event cannot be empty.");
@@ -247,7 +247,7 @@ public class JassaBot {
      */
     private void addTodo(String command, TaskList tasks)
             throws JassaBotException {
-        String description = command.substring(4).trim();
+        String description = command.substring("todo".length()).trim();
         if (description.isEmpty()) {
             throw new JassaBotException("The description of a todo cannot be empty.");
         }
