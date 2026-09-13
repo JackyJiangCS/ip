@@ -87,18 +87,14 @@ public class TaskList {
     /**
      * Finds tasks whose descriptions contain the supplied keyword, ignoring letter case.
      *
-     * @param keyword text to search for in task descriptions
-     * @return matching tasks in their original list order
+     * @param keyword Text to search for in task descriptions.
+     * @return Unmodifiable matching tasks in their original list order.
      */
     public List<Task> find(String keyword) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
-        ArrayList<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)) {
-                matches.add(task);
-            }
-        }
-        return Collections.unmodifiableList(matches);
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword))
+                .toList();
     }
 
     /**
