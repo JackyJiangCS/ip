@@ -24,7 +24,9 @@ public final class Parser {
      * @return Matching command type, or {@link CommandType#UNKNOWN} if none matches.
      */
     public static CommandType parseCommandType(String command) {
-        if (command.equals("bye")) {
+        if (command.equals("help")) {
+            return CommandType.HELP;
+        } else if (command.equals("bye")) {
             return CommandType.BYE;
         } else if (command.equals("list")) {
             return CommandType.LIST;

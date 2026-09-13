@@ -40,6 +40,7 @@ ____________________________________________________________
  _|_|\__,_|___/___/\__,_|   |____/ \___/ \__|
 Hello! I'm JassaBot.
 What can I do for you?
+Type help to see available commands.
 ____________________________________________________________
 ```
 
@@ -450,7 +451,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Try todo, deadline, event, list, mark, unmark, delete, find, or bye.
+   OOPS!!! I don't recognise that command. Type help to see available commands.
    ____________________________________________________________
    ```
 
@@ -1465,6 +1466,312 @@ ____________________________________________________________
    ```
 
 6. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+### TC-18 - Show help and continue using tasks
+
+**Aim:** Verify exact help output, repeated requests, leading spaces, unchanged tasks, and continued command handling.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   help
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   JassaBot commands:
+   todo DESCRIPTION - Add a task.
+   deadline DESCRIPTION /by DATE [TIME] - Add a deadline.
+   event DESCRIPTION /from DATE [TIME] /to DATE [TIME] - Add an event.
+   list - Show all tasks and their numbers.
+   find KEYWORD - Find descriptions containing KEYWORD, ignoring case.
+   mark NUMBER - Mark a task as done.
+   unmark NUMBER - Mark a task as not done.
+   delete NUMBER - Delete a task.
+   help - Show this help.
+   bye - Exit JassaBot.
+
+   Replace uppercase placeholders with your values. [TIME] is optional.
+   Commands are lowercase. Dates: yyyy-MM-dd or d/M/yyyy. Time: 24-hour HHmm.
+   Use numbers from list for mark, unmark, and delete; find renumbers its results.
+
+   Examples:
+   deadline return book /by 2019-12-02 1800
+   event meeting /from 2019-12-02 1400 /to 2019-12-02 1600
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   todo keep me
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Got it. I've added this task:
+     [T][ ] keep me
+   Now you have 1 tasks in the list.
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 0 | keep me
+   ```
+
+3. Input:
+
+   ```text
+     help
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   JassaBot commands:
+   todo DESCRIPTION - Add a task.
+   deadline DESCRIPTION /by DATE [TIME] - Add a deadline.
+   event DESCRIPTION /from DATE [TIME] /to DATE [TIME] - Add an event.
+   list - Show all tasks and their numbers.
+   find KEYWORD - Find descriptions containing KEYWORD, ignoring case.
+   mark NUMBER - Mark a task as done.
+   unmark NUMBER - Mark a task as not done.
+   delete NUMBER - Delete a task.
+   help - Show this help.
+   bye - Exit JassaBot.
+
+   Replace uppercase placeholders with your values. [TIME] is optional.
+   Commands are lowercase. Dates: yyyy-MM-dd or d/M/yyyy. Time: 24-hour HHmm.
+   Use numbers from list for mark, unmark, and delete; find renumbers its results.
+
+   Examples:
+   deadline return book /by 2019-12-02 1800
+   event meeting /from 2019-12-02 1400 /to 2019-12-02 1600
+   ____________________________________________________________
+   ```
+
+   Expected saved file:
+
+   ```text
+   T | 0 | keep me
+   ```
+
+4. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here are the tasks in your list:
+   1.[T][ ] keep me
+   ____________________________________________________________
+   ```
+
+5. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye. Hope to see you again soon!
+   ____________________________________________________________
+   ```
+
+
+### TC-19 - Reject help arguments, aliases, and wrong case
+
+**Aim:** Verify that invalid help variants use the unknown-command response and allow recovery.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   help todo
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I don't recognise that command. Type help to see available commands.
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   HELP
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I don't recognise that command. Type help to see available commands.
+   ____________________________________________________________
+   ```
+
+3. Input:
+
+   ```text
+   Help
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I don't recognise that command. Type help to see available commands.
+   ____________________________________________________________
+   ```
+
+4. Input:
+
+   ```text
+   ?
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I don't recognise that command. Type help to see available commands.
+   ____________________________________________________________
+   ```
+
+5. Input:
+
+   ```text
+   /help
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I don't recognise that command. Type help to see available commands.
+   ____________________________________________________________
+   ```
+
+6. Input:
+
+   ```text
+   --help
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I don't recognise that command. Type help to see available commands.
+   ____________________________________________________________
+   ```
+
+7. Input:
+
+   ```text
+   helper
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I don't recognise that command. Type help to see available commands.
+   ____________________________________________________________
+   ```
+
+8. Input:
+
+   ```text
+   help123
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I don't recognise that command. Type help to see available commands.
+   ____________________________________________________________
+   ```
+
+9. Input:
+
+   ```text
+   help	todo
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   OOPS!!! I don't recognise that command. Type help to see available commands.
+   ____________________________________________________________
+   ```
+
+10. Input:
+
+   ```text
+   help
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   JassaBot commands:
+   todo DESCRIPTION - Add a task.
+   deadline DESCRIPTION /by DATE [TIME] - Add a deadline.
+   event DESCRIPTION /from DATE [TIME] /to DATE [TIME] - Add an event.
+   list - Show all tasks and their numbers.
+   find KEYWORD - Find descriptions containing KEYWORD, ignoring case.
+   mark NUMBER - Mark a task as done.
+   unmark NUMBER - Mark a task as not done.
+   delete NUMBER - Delete a task.
+   help - Show this help.
+   bye - Exit JassaBot.
+
+   Replace uppercase placeholders with your values. [TIME] is optional.
+   Commands are lowercase. Dates: yyyy-MM-dd or d/M/yyyy. Time: 24-hour HHmm.
+   Use numbers from list for mark, unmark, and delete; find renumbers its results.
+
+   Examples:
+   deadline return book /by 2019-12-02 1800
+   event meeting /from 2019-12-02 1400 /to 2019-12-02 1600
+   ____________________________________________________________
+   ```
+
+11. Input:
 
    ```text
    bye

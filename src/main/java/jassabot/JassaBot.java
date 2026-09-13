@@ -374,6 +374,7 @@ public class JassaBot {
      */
     private void executeCommand(String command) throws JassaBotException {
         switch (commandType) {
+            case HELP -> ui.showHelp();
             case BYE -> {
                 isExitRequested = true;
                 ui.showGoodbye();
@@ -387,8 +388,7 @@ public class JassaBot {
             case EVENT -> addEvent(command, tasks);
             case TODO -> addTodo(command, tasks);
             default -> throw new JassaBotException(
-                    "I don't recognise that command. Try todo, deadline, event, list, mark, "
-                            + "unmark, delete, find, or bye.");
+                    "I don't recognise that command. Type help to see available commands.");
         }
     }
 
