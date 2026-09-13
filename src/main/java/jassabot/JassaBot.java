@@ -191,8 +191,8 @@ public class JassaBot {
     private void addDeadline(String command, TaskList tasks)
             throws JassaBotException {
         int byIndex = findMarker(command, " /by");
-        String description = byIndex == -1 ? command.substring(8).trim()
-                : command.substring(8, byIndex).trim();
+        String description = byIndex == -1 ? command.substring("deadline".length()).trim()
+                : command.substring("deadline".length(), byIndex).trim();
 
         if (description.isEmpty()) {
             throw new JassaBotException("The description of a deadline cannot be empty.");
@@ -206,17 +206,7 @@ public class JassaBot {
         }
 
         LocalDateTime by = Parser.parseDateTime(byDateTimeText);
-        Deadline newDeadline = new Deadline(description, by);
-        tasks.add(newDeadline);
-        try {
-            storage.saveTasks(tasks.asList());
-        } catch (StorageException e) {
-            // Rollback removes the last task, so it must still be the deadline just appended.
-            assert tasks.get(tasks.size() - 1) == newDeadline : "Rollback must remove the new deadline.";
-            tasks.remove(tasks.size() - 1);
-            throw createSaveException();
-        }
-        ui.showTaskAdded(newDeadline, tasks.size());
+        addTask(new Deadline(description, by), tasks);
     }
 
     /**
@@ -230,8 +220,8 @@ public class JassaBot {
             throws JassaBotException {
         int fromIndex = findMarker(command, " /from");
         int toIndex = findMarker(command, " /to");
-        String description = fromIndex == -1 ? command.substring(5).trim()
-                : command.substring(5, fromIndex).trim();
+        String description = fromIndex == -1 ? command.substring("event".length()).trim()
+                : command.substring("event".length(), fromIndex).trim();
 
         if (description.isEmpty()) {
             throw new JassaBotException("The description of an event cannot be empty.");
@@ -249,17 +239,7 @@ public class JassaBot {
 
         LocalDateTime from = Parser.parseDateTime(fromDateTimeText);
         LocalDateTime to = Parser.parseDateTime(toDateTimeText);
-        Event newEvent = new Event(description, from, to);
-        tasks.add(newEvent);
-        try {
-            storage.saveTasks(tasks.asList());
-        } catch (StorageException e) {
-            // Rollback removes the last task, so it must still be the event just appended.
-            assert tasks.get(tasks.size() - 1) == newEvent : "Rollback must remove the new event.";
-            tasks.remove(tasks.size() - 1);
-            throw createSaveException();
-        }
-        ui.showTaskAdded(newEvent, tasks.size());
+        addTask(new Event(description, from, to), tasks);
     }
 
     /**
@@ -271,22 +251,32 @@ public class JassaBot {
      */
     private void addTodo(String command, TaskList tasks)
             throws JassaBotException {
-        String description = command.substring(4).trim();
+        String description = command.substring("todo".length()).trim();
         if (description.isEmpty()) {
             throw new JassaBotException("The description of a todo cannot be empty.");
         }
 
-        Todo newTodo = new Todo(description);
-        tasks.add(newTodo);
+        addTask(new Todo(description), tasks);
+    }
+
+    /**
+     * Adds and saves a validated task, removing it again if persistence fails.
+     *
+     * @param task Task to add.
+     * @param tasks Tasks currently stored by the application.
+     * @throws JassaBotException If the changed list cannot be saved.
+     */
+    private void addTask(Task task, TaskList tasks) throws JassaBotException {
+        tasks.add(task);
         try {
             storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
-            // Rollback removes the last task, so it must still be the todo just appended.
-            assert tasks.get(tasks.size() - 1) == newTodo : "Rollback must remove the new todo.";
+            // Rollback removes the last task, so it must still be the task just appended.
+            assert tasks.get(tasks.size() - 1) == task : "Rollback must remove the new task.";
             tasks.remove(tasks.size() - 1);
             throw createSaveException();
         }
-        ui.showTaskAdded(newTodo, tasks.size());
+        ui.showTaskAdded(task, tasks.size());
     }
 
     /**
@@ -366,23 +356,7 @@ public class JassaBot {
                 throw new JassaBotException("Please enter a command.");
             }
             commandType = Parser.parseCommandType(command);
-            switch (commandType) {
-                case BYE -> {
-                    isExitRequested = true;
-                    ui.showGoodbye();
-                }
-                case LIST -> showTaskList(tasks);
-                case MARK -> markTask(command, tasks);
-                case UNMARK -> unmarkTask(command, tasks);
-                case DELETE -> deleteTask(command, tasks);
-                case FIND -> findTasks(command, tasks);
-                case DEADLINE -> addDeadline(command, tasks);
-                case EVENT -> addEvent(command, tasks);
-                case TODO -> addTodo(command, tasks);
-                default -> throw new JassaBotException(
-                        "I don't recognise that command. Try todo, deadline, event, list, mark, "
-                                + "unmark, delete, find, or bye.");
-            }
+            executeCommand(command);
         } catch (JassaBotException e) {
             commandType = CommandType.UNKNOWN;
             ui.showError(e.getMessage());
@@ -390,6 +364,32 @@ public class JassaBot {
         // Every command handler, including an error handler, owes the user a visible response.
         assert !response.toString().isBlank() : "Every command must produce a response.";
         return response.toString().stripTrailing();
+    }
+
+    /**
+     * Dispatches a recognized command to its task operation or exit action.
+     *
+     * @param command Trimmed user command whose type has already been parsed.
+     * @throws JassaBotException If the command is unknown or its operation fails.
+     */
+    private void executeCommand(String command) throws JassaBotException {
+        switch (commandType) {
+            case BYE -> {
+                isExitRequested = true;
+                ui.showGoodbye();
+            }
+            case LIST -> showTaskList(tasks);
+            case MARK -> markTask(command, tasks);
+            case UNMARK -> unmarkTask(command, tasks);
+            case DELETE -> deleteTask(command, tasks);
+            case FIND -> findTasks(command, tasks);
+            case DEADLINE -> addDeadline(command, tasks);
+            case EVENT -> addEvent(command, tasks);
+            case TODO -> addTodo(command, tasks);
+            default -> throw new JassaBotException(
+                    "I don't recognise that command. Try todo, deadline, event, list, mark, "
+                            + "unmark, delete, find, or bye.");
+        }
     }
 
     /**
