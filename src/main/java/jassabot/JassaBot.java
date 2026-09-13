@@ -116,6 +116,8 @@ public class JassaBot {
             if (!wasDone) {
                 tasks.unmark(index);
             }
+            // A failed save must restore the completion state promised by the rollback message.
+            assert task.isDone() == wasDone : "Mark rollback must restore the previous completion state.";
             throw createSaveException();
         }
         ui.showTaskMarked(task);
@@ -146,6 +148,8 @@ public class JassaBot {
             if (wasDone) {
                 tasks.mark(index);
             }
+            // This also covers unmarking a task that was already incomplete.
+            assert task.isDone() == wasDone : "Unmark rollback must restore the previous completion state.";
             throw createSaveException();
         }
         ui.showTaskUnmarked(task);
@@ -207,6 +211,8 @@ public class JassaBot {
         try {
             storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
+            // Rollback removes the last task, so it must still be the deadline just appended.
+            assert tasks.get(tasks.size() - 1) == newDeadline : "Rollback must remove the new deadline.";
             tasks.remove(tasks.size() - 1);
             throw createSaveException();
         }
@@ -248,6 +254,8 @@ public class JassaBot {
         try {
             storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
+            // Rollback removes the last task, so it must still be the event just appended.
+            assert tasks.get(tasks.size() - 1) == newEvent : "Rollback must remove the new event.";
             tasks.remove(tasks.size() - 1);
             throw createSaveException();
         }
@@ -273,6 +281,8 @@ public class JassaBot {
         try {
             storage.saveTasks(tasks.asList());
         } catch (StorageException e) {
+            // Rollback removes the last task, so it must still be the todo just appended.
+            assert tasks.get(tasks.size() - 1) == newTodo : "Rollback must remove the new todo.";
             tasks.remove(tasks.size() - 1);
             throw createSaveException();
         }
@@ -287,6 +297,8 @@ public class JassaBot {
      * @return index of the marker, or {@code -1} if it is absent.
      */
     private static int findMarker(String command, String marker) {
+        // Callers supply fixed markers; an empty marker would prevent the search from advancing.
+        assert marker != null && !marker.isEmpty() : "A command marker must be non-empty.";
         int searchFrom = 0;
         while (searchFrom < command.length()) {
             int markerIndex = command.indexOf(marker, searchFrom);
@@ -321,6 +333,8 @@ public class JassaBot {
      * @return the zero-based task index, or {@code -1} if the number is invalid.
      */
     private static int getTaskIndex(String number, int numberOfTasks) {
+        // The count comes from TaskList.size(), independently of the user's task-number input.
+        assert numberOfTasks >= 0 : "The task count must not be negative.";
         try {
             int taskNumber = Integer.parseInt(number.trim());
             if (taskNumber < 1 || taskNumber > numberOfTasks) {
@@ -373,6 +387,8 @@ public class JassaBot {
             commandType = CommandType.UNKNOWN;
             ui.showError(e.getMessage());
         }
+        // Every command handler, including an error handler, owes the user a visible response.
+        assert !response.toString().isBlank() : "Every command must produce a response.";
         return response.toString().stripTrailing();
     }
 
