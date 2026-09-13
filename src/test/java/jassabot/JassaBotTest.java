@@ -1,5 +1,6 @@
 package jassabot;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,6 +23,28 @@ import jassabot.parser.CommandType;
  * Tests the command entry point shared by the GUI and console, including failed saves.
  */
 public class JassaBotTest {
+    private static final String HELP_RESPONSE = """
+            JassaBot commands:
+            todo DESCRIPTION - Add a task.
+            deadline DESCRIPTION /by DATE [TIME] - Add a deadline.
+            event DESCRIPTION /from DATE [TIME] /to DATE [TIME] - Add an event.
+            list - Show all tasks and their numbers.
+            find KEYWORD - Find descriptions containing KEYWORD, ignoring case.
+            mark NUMBER - Mark a task as done.
+            unmark NUMBER - Mark a task as not done.
+            delete NUMBER - Delete a task.
+            help - Show this help.
+            bye - Exit JassaBot.
+
+            Replace uppercase placeholders with your values. [TIME] is optional.
+            Commands are lowercase. Dates: yyyy-MM-dd or d/M/yyyy. Time: 24-hour HHmm.
+            Use numbers from list for mark, unmark, and delete; find renumbers its results.
+
+            Examples:
+            deadline return book /by 2019-12-02 1800
+            event meeting /from 2019-12-02 1400 /to 2019-12-02 1600
+            """.stripTrailing();
+
     private final Path directory = Path.of("build", "test-data", "bot-" + UUID.randomUUID());
     private final Path dataFile = directory.resolve("tasks.txt");
     private JassaBot bot;
@@ -41,6 +64,52 @@ public class JassaBotTest {
         for (Path path : paths) {
             Files.deleteIfExists(path);
         }
+    }
+
+    @Test
+    public void getResponse_help_displaysReferenceWithoutCreatingStorage() {
+        bot = new JassaBot(directory.resolve("missing").resolve("tasks.txt"));
+        for (String command : List.of("help", "  help  ", "\thelp\t")) {
+            assertEquals(HELP_RESPONSE, bot.getResponse(command));
+            assertEquals(CommandType.HELP, bot.getCommandType());
+            assertFalse(bot.isExitRequested());
+            assertFalse(Files.exists(directory.resolve("missing")));
+        }
+        assertEquals("Here are the tasks in your list:", bot.getResponse("list"));
+        assertTrue(bot.getResponse("todo after help").contains("[T][ ] after help"));
+    }
+
+    @Test
+    public void getResponse_helpAndInvalidVariants_preserveTasksAndSavedBytes() throws IOException {
+        bot.getResponse("todo keep first");
+        bot.getResponse("todo keep second");
+        bot.getResponse("mark 2");
+        String listing = bot.getResponse("list");
+        byte[] saved = Files.readAllBytes(dataFile);
+        assertEquals(HELP_RESPONSE, bot.getResponse("help"));
+        assertEquals(listing, bot.getResponse("list"));
+        assertArrayEquals(saved, Files.readAllBytes(dataFile));
+        for (String command : List.of("HELP", "Help", "?", "/help", "--help", "helper",
+                "helpful", "help123", "help todo", "help unknown", "help\ttodo")) {
+            assertEquals("OOPS!!! I don't recognise that command. Type help to see available commands.",
+                    bot.getResponse(command), command);
+            assertEquals(CommandType.UNKNOWN, bot.getCommandType());
+            assertFalse(bot.isExitRequested());
+            assertEquals(listing, bot.getResponse("list"));
+            assertArrayEquals(saved, Files.readAllBytes(dataFile));
+        }
+        assertEquals(HELP_RESPONSE, bot.getResponse("help"));
+    }
+
+    @Test
+    public void getResponse_helpWithUnavailableStorage_remainsAvailable() throws IOException {
+        Files.createDirectory(dataFile);
+        bot = new JassaBot(dataFile);
+        assertTrue(bot.getWelcome().contains("WARNING: The task data path is not a regular file."));
+        assertEquals(HELP_RESPONSE, bot.getResponse("help"));
+        assertEquals(CommandType.HELP, bot.getCommandType());
+        assertEquals("Here are the tasks in your list:", bot.getResponse("list"));
+        assertTrue(Files.isDirectory(dataFile));
     }
 
     @Test
@@ -94,7 +163,9 @@ public class JassaBotTest {
         Files.writeString(dataFile, "T | 1 | saved task\nX | 0 | invalid\n");
         bot = new JassaBot(dataFile);
         assertEquals("Hello! I'm JassaBot.\nWhat can I do for you?\n"
+                + "Type help to see available commands.\n"
                 + "WARNING: Skipped data line 2: unknown task type 'X'.", bot.getWelcome());
+        assertEquals(HELP_RESPONSE, bot.getResponse("help"));
         assertEquals("Here are the tasks in your list:\n1.[T][X] saved task", bot.getResponse("list"));
     }
 
@@ -126,6 +197,9 @@ public class JassaBotTest {
         assertEquals(CommandType.BYE, bot.getCommandType());
         assertTrue(bot.isExitRequested());
         assertEquals("Bye. Hope to see you again soon!", bot.getResponse("todo too late"));
+        assertEquals("Bye. Hope to see you again soon!", bot.getResponse("help"));
+        assertEquals(CommandType.UNKNOWN, bot.getCommandType());
+        assertTrue(bot.isExitRequested());
         assertEquals(saved, Files.readString(dataFile));
     }
 }

@@ -34,6 +34,7 @@ On macOS/Linux, use `./gradlew` in place of `.\gradlew.bat`.
 Both interfaces load and save `data/jassabot.txt` relative to the working directory.
 Run one interface at a time so separate sessions do not overwrite each other's saved tasks.
 
+Type `help` in either interface to see the command reference.
 In the GUI, type a command and press Enter or click Send. Commands include `todo read book`,
 `deadline return book /by 2019-12-02 1800`, `event meeting /from 2019-12-02 1400 /to 2019-12-02 1600`,
 `list`, `mark 1`, `unmark 1`, `delete 1`, and `find book`.

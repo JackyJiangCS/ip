@@ -77,7 +77,32 @@ public class Ui {
         if (hasConsoleDecorations) {
             output.accept(BANNER);
         }
-        showLines("Hello! I'm JassaBot.", "What can I do for you?");
+        showLines("Hello! I'm JassaBot.", "What can I do for you?",
+                "Type help to see available commands.");
+        showResponseStart();
+    }
+
+    /** Displays the command reference shared by the console and GUI. */
+    public void showHelp() {
+        showLines("JassaBot commands:",
+                "todo DESCRIPTION - Add a task.",
+                "deadline DESCRIPTION /by DATE [TIME] - Add a deadline.",
+                "event DESCRIPTION /from DATE [TIME] /to DATE [TIME] - Add an event.",
+                "list - Show all tasks and their numbers.",
+                "find KEYWORD - Find descriptions containing KEYWORD, ignoring case.",
+                "mark NUMBER - Mark a task as done.",
+                "unmark NUMBER - Mark a task as not done.",
+                "delete NUMBER - Delete a task.",
+                "help - Show this help.",
+                "bye - Exit JassaBot.",
+                "",
+                "Replace uppercase placeholders with your values. [TIME] is optional.",
+                "Commands are lowercase. Dates: yyyy-MM-dd or d/M/yyyy. Time: 24-hour HHmm.",
+                "Use numbers from list for mark, unmark, and delete; find renumbers its results.",
+                "",
+                "Examples:",
+                "deadline return book /by 2019-12-02 1800",
+                "event meeting /from 2019-12-02 1400 /to 2019-12-02 1600");
         showResponseStart();
     }
 

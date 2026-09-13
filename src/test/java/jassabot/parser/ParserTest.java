@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,7 @@ public class ParserTest {
     @Test
     public void parseCommandType_bareSupportedCommand_returnsCorrespondingType() {
         assertAll(() ->
+                assertEquals(CommandType.HELP, Parser.parseCommandType("help")), () ->
                 assertEquals(CommandType.BYE, Parser.parseCommandType("bye")), () ->
                 assertEquals(CommandType.LIST, Parser.parseCommandType("list")), () ->
                 assertEquals(CommandType.MARK, Parser.parseCommandType("mark")), () ->
@@ -61,6 +63,14 @@ public class ParserTest {
                 assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("todoist")), () ->
                 assertEquals(CommandType.UNKNOWN, Parser.parseCommandType("todo\tread book"))
         );
+    }
+
+    @Test
+    public void parseCommandType_invalidHelp_returnsUnknown() {
+        for (String command : List.of("HELP", "Help", "?", "/help", "--help",
+                "helper", "helpful", "help123", "help todo", "help unknown", "help\ttodo", " help ")) {
+            assertEquals(CommandType.UNKNOWN, Parser.parseCommandType(command), command);
+        }
     }
 
     @Test
