@@ -346,28 +346,38 @@ public class JassaBot {
                 throw new JassaBotException("Please enter a command.");
             }
             commandType = Parser.parseCommandType(command);
-            switch (commandType) {
-                case BYE -> {
-                    isExitRequested = true;
-                    ui.showGoodbye();
-                }
-                case LIST -> showTaskList(tasks);
-                case MARK -> markTask(command, tasks);
-                case UNMARK -> unmarkTask(command, tasks);
-                case DELETE -> deleteTask(command, tasks);
-                case FIND -> findTasks(command, tasks);
-                case DEADLINE -> addDeadline(command, tasks);
-                case EVENT -> addEvent(command, tasks);
-                case TODO -> addTodo(command, tasks);
-                default -> throw new JassaBotException(
-                        "I don't recognise that command. Try todo, deadline, event, list, mark, "
-                                + "unmark, delete, find, or bye.");
-            }
+            executeCommand(command);
         } catch (JassaBotException e) {
             commandType = CommandType.UNKNOWN;
             ui.showError(e.getMessage());
         }
         return response.toString().stripTrailing();
+    }
+
+    /**
+     * Dispatches a recognized command to its task operation or exit action.
+     *
+     * @param command Trimmed user command whose type has already been parsed.
+     * @throws JassaBotException If the command is unknown or its operation fails.
+     */
+    private void executeCommand(String command) throws JassaBotException {
+        switch (commandType) {
+            case BYE -> {
+                isExitRequested = true;
+                ui.showGoodbye();
+            }
+            case LIST -> showTaskList(tasks);
+            case MARK -> markTask(command, tasks);
+            case UNMARK -> unmarkTask(command, tasks);
+            case DELETE -> deleteTask(command, tasks);
+            case FIND -> findTasks(command, tasks);
+            case DEADLINE -> addDeadline(command, tasks);
+            case EVENT -> addEvent(command, tasks);
+            case TODO -> addTodo(command, tasks);
+            default -> throw new JassaBotException(
+                    "I don't recognise that command. Try todo, deadline, event, list, mark, "
+                            + "unmark, delete, find, or bye.");
+        }
     }
 
     /**
