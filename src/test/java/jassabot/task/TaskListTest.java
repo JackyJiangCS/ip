@@ -98,4 +98,51 @@ public class TaskListTest {
         assertThrows(UnsupportedOperationException.class, () ->
                 readOnlyTasks.add(new Todo("write report")));
     }
+
+    @Test
+    public void operations_invalidIndexes_leaveOrderAndCompletionUnchanged() {
+        Todo task = new Todo("retained");
+        TaskList tasks = new TaskList(List.of(task));
+        for (int index : List.of(-1, 1, Integer.MAX_VALUE)) {
+            assertThrows(IndexOutOfBoundsException.class, () -> tasks.get(index));
+            assertThrows(IndexOutOfBoundsException.class, () -> tasks.remove(index));
+            assertThrows(IndexOutOfBoundsException.class, () -> tasks.mark(index));
+            assertThrows(IndexOutOfBoundsException.class, () -> tasks.unmark(index));
+            assertEquals(List.of(task), tasks.asList());
+            assertFalse(task.isDone());
+        }
+        assertThrows(IndexOutOfBoundsException.class, () -> tasks.add(-1, new Todo("invalid")));
+        assertThrows(IndexOutOfBoundsException.class, () -> tasks.add(2, new Todo("invalid")));
+        assertEquals(List.of(task), tasks.asList());
+    }
+
+    @Test
+    public void asList_existingView_tracksChangesButRejectsMutation() {
+        Todo first = new Todo("first");
+        Todo second = new Todo("second");
+        TaskList tasks = new TaskList(List.of(first));
+        List<Task> view = tasks.asList();
+        tasks.add(second);
+        assertEquals(List.of(first, second), view);
+        tasks.remove(0);
+        assertEquals(List.of(second), view);
+        assertThrows(UnsupportedOperationException.class, () -> view.set(0, first));
+        assertThrows(UnsupportedOperationException.class, () -> view.remove(0));
+        assertThrows(UnsupportedOperationException.class, view::clear);
+        assertEquals(List.of(second), tasks.asList());
+    }
+
+    @Test
+    public void find_substringAndDuplicateDescriptions_returnsReadOnlySnapshot() {
+        Todo first = new Todo("Read BOOK");
+        Todo second = new Todo("Read BOOK");
+        TaskList tasks = new TaskList(List.of(first, new Todo("other"), second));
+        List<Task> matches = tasks.find("oo");
+        assertEquals(List.of(first, second), matches);
+        assertThrows(UnsupportedOperationException.class, () -> matches.remove(0));
+        tasks.remove(0);
+        tasks.add(new Todo("another book"));
+        assertEquals(List.of(first, second), matches);
+        assertEquals(tasks.asList(), tasks.find(""));
+    }
 }

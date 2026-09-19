@@ -1,6 +1,7 @@
 package jassabot.storage;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -185,5 +186,106 @@ public class StorageTest {
                         exception.getMessage()), () ->
                 assertNotNull(exception.getCause())
         );
+    }
+
+    @Test
+    public void saveTasks_nestedMissingDirectories_createsParentsAndClearsSavedTasks()
+            throws IOException, StorageException {
+        Path dataFile = testDirectory.resolve("nested").resolve("directory").resolve("tasks.txt");
+        Storage storage = new Storage(dataFile);
+        storage.saveTasks(List.of(new Todo("saved")));
+        assertEquals(List.of("T | 0 | saved"), Files.readAllLines(dataFile));
+        storage.saveTasks(List.of());
+        assertEquals(0, Files.size(dataFile));
+        assertTrue(storage.loadTasks().getTasks().isEmpty());
+        assertTrue(storage.loadTasks().getWarnings().isEmpty());
+    }
+
+    @Test
+    public void saveTasks_filenameWithoutParent_roundTripsAndCleansUp() throws IOException, StorageException {
+        Path dataFile = Path.of("storage-test-" + UUID.randomUUID() + ".txt");
+        try {
+            Storage storage = new Storage(dataFile);
+            storage.saveTasks(List.of(new Todo("relative filename")));
+            assertEquals(List.of("T | 0 | relative filename"), Files.readAllLines(dataFile));
+            assertEquals("relative filename", storage.loadTasks().getTasks().get(0).getDescription());
+            assertTrue(storage.loadTasks().getWarnings().isEmpty());
+        } finally {
+            Files.deleteIfExists(dataFile);
+        }
+    }
+
+    @Test
+    public void saveTasks_nonemptyDirectory_preservesContentsAndRemovesTemporaryFile() throws IOException {
+        Path dataFile = testDirectory.resolve("tasks.txt");
+        Files.createDirectory(dataFile);
+        Path blocker = dataFile.resolve("blocker");
+        Files.writeString(blocker, "retained");
+        Storage storage = new Storage(dataFile);
+        StorageException exception = assertThrows(StorageException.class, () ->
+                storage.saveTasks(List.of(new Todo("rejected"))));
+        assertEquals("The task data file could not be written.", exception.getMessage());
+        assertNotNull(exception.getCause());
+        assertEquals("retained", Files.readString(blocker));
+        try (Stream<Path> paths = Files.list(testDirectory)) {
+            assertEquals(List.of(dataFile), paths.toList());
+        }
+    }
+
+    @Test
+    public void loadTasks_invalidUtf8_reportsReadFailureWithoutChangingBytes() throws IOException {
+        Path dataFile = testDirectory.resolve("tasks.txt");
+        byte[] invalidBytes = {(byte) 0xc3, (byte) 0x28};
+        Files.write(dataFile, invalidBytes);
+        Storage.LoadResult result = new Storage(dataFile).loadTasks();
+        assertTrue(result.getTasks().isEmpty());
+        assertEquals(List.of("The task data file could not be read. Starting with an empty task list."),
+                result.getWarnings());
+        assertArrayEquals(invalidBytes, Files.readAllBytes(dataFile));
+    }
+
+    @Test
+    public void loadTasks_trailingBackslashAndUnknownEscapes_preservesLegacyText() throws IOException {
+        Path dataFile = testDirectory.resolve("tasks.txt");
+        Files.write(dataFile, List.of("T | 0 | trailing\\", "T | 0 | legacy\\n\\t\\q"));
+        Storage.LoadResult result = new Storage(dataFile).loadTasks();
+        assertEquals(List.of("trailing\\", "legacy\\n\\t\\q"),
+                result.getTasks().stream().map(Task::getDescription).toList());
+        assertTrue(result.getWarnings().isEmpty());
+    }
+
+    @Test
+    public void saveAndLoad_unicodeAndRepeatedEscapes_preservesEveryTaskTypeAndStatus()
+            throws StorageException {
+        String description = "\u4e2d\u6587 \ud83c\udf31 | \\| \\\\ ||";
+        LocalDateTime date = LocalDateTime.of(2024, 2, 29, 0, 0);
+        List<Task> tasks = List.of(new Todo(description), new Deadline(description, date),
+                new Event(description, date, date.plusDays(1)));
+        tasks.forEach(Task::markAsDone);
+        Storage storage = new Storage(testDirectory.resolve("tasks.txt"));
+        storage.saveTasks(tasks);
+        Storage.LoadResult result = storage.loadTasks();
+        assertEquals(tasks.stream().map(Task::toString).toList(),
+                result.getTasks().stream().map(Task::toString).toList());
+        assertTrue(result.getWarnings().isEmpty());
+    }
+
+    @Test
+    public void loadTasks_missingFieldsAndBlankEventDates_reportsExactLineNumbers() throws IOException {
+        Path dataFile = testDirectory.resolve("tasks.txt");
+        Files.write(dataFile, List.of(" \t", "T", "D | 0 | date", "E | 0 | event | 2024-02-29T00:00",
+                "E | 0 | event |  | 2024-03-01T00:00", "E | 0 | event | 2024-02-29T00:00 | ",
+                "T |  | empty status", "T | 0 | recovered"));
+        Storage.LoadResult result = new Storage(dataFile).loadTasks();
+        assertEquals(List.of(
+                "Skipped data line 2: task type 'T' expects 3 fields but found 1.",
+                "Skipped data line 3: task type 'D' expects 4 fields but found 3.",
+                "Skipped data line 4: task type 'E' expects 5 fields but found 4.",
+                "Skipped data line 5: event start date and time cannot be empty.",
+                "Skipped data line 6: event end date and time cannot be empty.",
+                "Skipped data line 7: status must be 0 or 1."), result.getWarnings());
+        assertEquals(1, result.getTasks().size());
+        assertEquals("recovered", result.getTasks().get(0).getDescription());
+        assertThrows(UnsupportedOperationException.class, () -> result.getWarnings().add("extra"));
     }
 }
