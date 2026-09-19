@@ -388,7 +388,7 @@ public class JassaBot {
             case EVENT -> addEvent(command, tasks);
             case TODO -> addTodo(command, tasks);
             default -> throw new JassaBotException(
-                    "I don't recognise that command. Type help to see available commands.");
+                    "I couldn't understand that command. Try help to see what you can do.");
         }
     }
 

@@ -77,7 +77,7 @@ public class Ui {
         if (hasConsoleDecorations) {
             output.accept(BANNER);
         }
-        showLines("Hello! I'm JassaBot.", "What can I do for you?",
+        showLines("Hello, I'm JassaBot.", "Let's make room for a little progress today.",
                 "Type help to see available commands.");
         showResponseStart();
     }
@@ -144,7 +144,8 @@ public class Ui {
      * @param tasks Tasks currently stored by the application.
      */
     public void showTaskList(List<Task> tasks) {
-        output.accept("Here are the tasks in your list:");
+        output.accept(tasks.isEmpty() ? "Your garden is clear. Enjoy the breathing room."
+                : "Here's what's growing in your task list:");
         showNumberedTasks(tasks);
         showResponseStart();
     }
@@ -155,7 +156,8 @@ public class Ui {
      * @param tasks matching tasks in their original list order
      */
     public void showMatchingTasks(List<Task> tasks) {
-        output.accept("Here are the matching tasks in your list:");
+        output.accept(tasks.isEmpty() ? "No matching tasks this time. Try another keyword."
+                : "Here's what I found in your task garden:");
         showNumberedTasks(tasks);
         showResponseStart();
     }
@@ -177,7 +179,7 @@ public class Ui {
      * @param task Task that was marked as completed.
      */
     public void showTaskMarked(Task task) {
-        showLines("Nice! I've marked this task as done:", "  " + task);
+        showLines("A little progress, a little growth. Task completed:", "  " + task);
         showResponseStart();
     }
 
@@ -187,7 +189,7 @@ public class Ui {
      * @param task Task that was marked as incomplete.
      */
     public void showTaskUnmarked(Task task) {
-        showLines("OK, I've marked this task as not done yet:", "  " + task);
+        showLines("Room to grow. This task is marked as not done:", "  " + task);
         showResponseStart();
     }
 
@@ -198,9 +200,9 @@ public class Ui {
      * @param numberOfTasks Number of tasks remaining in the list.
      */
     public void showTaskDeleted(Task task, int numberOfTasks) {
-        showLines("Noted. I've removed this task:",
+        showLines("Removed this task. More room for what matters:",
                 "  " + task,
-                "Now you have " + numberOfTasks + " tasks in the list.");
+                formatTaskCount(numberOfTasks));
         showResponseStart();
     }
 
@@ -211,10 +213,18 @@ public class Ui {
      * @param numberOfTasks Number of tasks now in the list.
      */
     public void showTaskAdded(Task task, int numberOfTasks) {
-        showLines("Got it. I've added this task:",
+        showLines("Planted a new task:",
                 "  " + task,
-                "Now you have " + numberOfTasks + " tasks in the list.");
+                formatTaskCount(numberOfTasks));
         showResponseStart();
+    }
+
+    /**
+     * Returns a task count with the correct singular or plural noun.
+     */
+    private String formatTaskCount(int numberOfTasks) {
+        String taskWord = numberOfTasks == 1 ? "task" : "tasks";
+        return "Your garden now holds " + numberOfTasks + " " + taskWord + ".";
     }
 
     /** Displays the shared invalid-task-number response. */
@@ -229,20 +239,20 @@ public class Ui {
      * @param message User-facing explanation of the error.
      */
     public void showError(String message) {
-        output.accept("OOPS!!! " + message);
+        output.accept(message);
         showResponseStart();
     }
 
     /** Displays the normal farewell requested by the {@code bye} command. */
     public void showGoodbye() {
-        output.accept("Bye. Hope to see you again soon!");
+        output.accept("Bye for now. Take your time, and keep growing.");
         showResponseStart();
     }
 
     /** Displays the farewell used when the input stream closes. */
     public void showInputClosed() {
         showResponseStart();
-        output.accept("Input closed. Goodbye!");
+        output.accept("Input closed. Take care, and keep growing.");
         showResponseStart();
     }
 }

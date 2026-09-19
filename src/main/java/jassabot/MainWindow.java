@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -27,9 +26,6 @@ public class MainWindow extends AnchorPane {
 
     private JassaBot jassaBot;
 
-    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-    private final Image jassaBotImage = new Image(this.getClass().getResourceAsStream("/images/DaJassa.png"));
-
     /**
      * Keeps the newest message visible when the conversation grows.
      */
@@ -45,7 +41,7 @@ public class MainWindow extends AnchorPane {
     public void setJassaBot(JassaBot jassaBot) {
         this.jassaBot = jassaBot;
         dialogContainer.getChildren().add(
-                DialogBox.getJassaBotDialog(jassaBot.getWelcome(), jassaBotImage, CommandType.UNKNOWN));
+                DialogBox.getJassaBotDialog(jassaBot.getWelcome(), CommandType.UNKNOWN));
     }
 
     /**
@@ -57,8 +53,8 @@ public class MainWindow extends AnchorPane {
         String response = jassaBot.getResponse(input);
         CommandType commandType = jassaBot.getCommandType();
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getJassaBotDialog(response, jassaBotImage, commandType)
+                DialogBox.getUserDialog(input),
+                DialogBox.getJassaBotDialog(response, commandType)
         );
         userInput.clear();
         if (jassaBot.isExitRequested()) {

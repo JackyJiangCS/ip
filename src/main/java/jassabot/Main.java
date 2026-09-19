@@ -24,9 +24,8 @@ public class Main extends Application {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("JassaBot");
-            stage.setMinHeight(220);
-            stage.setMinWidth(417);
-            stage.setMaxWidth(417);
+            stage.setMinHeight(420);
+            stage.setMinWidth(400);
             fxmlLoader.<MainWindow>getController().setJassaBot(jassaBot);
             stage.show();
 

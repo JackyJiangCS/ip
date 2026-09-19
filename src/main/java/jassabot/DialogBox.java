@@ -11,21 +11,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.SVGPath;
 
 /**
- * Represents a dialog box consisting of an ImageView to represent the speaker's face
- * and a label containing text from the speaker.
+ * Displays a chat message with a scalable garden or person avatar.
  */
 public class DialogBox extends HBox {
     @FXML
     private Label dialog;
     @FXML
-    private ImageView displayPicture;
+    private StackPane displayPicture;
+    @FXML
+    private SVGPath avatarIcon;
 
-    private DialogBox(String text, Image img) {
+    private DialogBox(String text, boolean isBot) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
@@ -36,11 +37,17 @@ public class DialogBox extends HBox {
         }
 
         dialog.setText(text);
-        displayPicture.setImage(img);
+        if (!isBot) {
+            // Keep the user distinct from JassaBot's sprout without relying on emoji fonts.
+            avatarIcon.setContent("M12 3 A4 4 0 1 1 12 11 A4 4 0 1 1 12 3 "
+                    + "M4 21 V19 C4 11 20 11 20 19 V21 Z");
+            displayPicture.getStyleClass().add("user-avatar");
+        }
+        displayPicture.setAccessibleText(isBot ? "JassaBot" : "You");
     }
 
     /**
-     * Flips the dialog box such that the ImageView is on the left and text on the right.
+     * Places the bot avatar on the left and its response on the right.
      */
     private void flip() {
         ObservableList<Node> children = FXCollections.observableArrayList(this.getChildren());
@@ -50,6 +57,9 @@ public class DialogBox extends HBox {
         dialog.getStyleClass().add("reply-label");
     }
 
+    /**
+     * Applies a subtle botanical color for successful task changes.
+     */
     private void changeDialogStyle(CommandType commandType) {
         switch (commandType) {
             case TODO, DEADLINE, EVENT -> dialog.getStyleClass().add("add-label");
@@ -64,8 +74,8 @@ public class DialogBox extends HBox {
     /**
      * Creates a bot reply with its portrait on the left and a command-specific color.
      */
-    public static DialogBox getJassaBotDialog(String text, Image img, CommandType commandType) {
-        DialogBox dialogBox = new DialogBox(text, img);
+    public static DialogBox getJassaBotDialog(String text, CommandType commandType) {
+        DialogBox dialogBox = new DialogBox(text, true);
         dialogBox.flip();
         dialogBox.changeDialogStyle(commandType);
         return dialogBox;
@@ -74,7 +84,7 @@ public class DialogBox extends HBox {
     /**
      * Creates a user message with its portrait on the right.
      */
-    public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+    public static DialogBox getUserDialog(String text) {
+        return new DialogBox(text, false);
     }
 }
