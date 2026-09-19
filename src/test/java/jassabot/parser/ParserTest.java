@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
@@ -120,5 +121,16 @@ public class ParserTest {
         JassaBotException exception = assertThrows(
                 JassaBotException.class, () -> Parser.parseDateTime(value));
         assertEquals(INVALID_DATE_TIME_MESSAGE, exception.getMessage());
+    }
+
+    @Test
+    public void parseCommandType_prefixesAndCaseVariants_rejectsNearMatches() {
+        for (String command : List.of("help", "bye", "list", "mark", "unmark", "delete",
+                "find", "deadline", "event", "todo")) {
+            assertEquals(CommandType.UNKNOWN, Parser.parseCommandType(command + "suffix"), command);
+            assertEquals(CommandType.UNKNOWN,
+                    Parser.parseCommandType(command.toUpperCase(Locale.ROOT)), command);
+            assertEquals(CommandType.UNKNOWN, Parser.parseCommandType(command + "\targument"), command);
+        }
     }
 }

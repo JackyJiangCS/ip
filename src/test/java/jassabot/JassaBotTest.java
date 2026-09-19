@@ -223,4 +223,141 @@ public class JassaBotTest {
         assertTrue(bot.isExitRequested());
         assertEquals(saved, Files.readString(dataFile));
     }
+
+    @Test
+    public void getResponse_invalidTaskNumbers_preserveMemoryAndSavedFile() throws IOException {
+        bot.getResponse("todo first");
+        bot.getResponse("todo last");
+        String listing = bot.getResponse("list");
+        byte[] saved = Files.readAllBytes(dataFile);
+        for (String operation : List.of("mark", "unmark", "delete")) {
+            for (String number : List.of("", "0", "-1", "3", "2147483647", "2147483648",
+                    "-2147483648", "1.0", "one", "1 2")) {
+                String command = operation + " " + number;
+                assertEquals("Please enter a valid task number.", bot.getResponse(command), command);
+                assertEquals(CommandType.UNKNOWN, bot.getCommandType(), command);
+                assertEquals(listing, bot.getResponse("list"), command);
+                assertArrayEquals(saved, Files.readAllBytes(dataFile), command);
+            }
+        }
+    }
+
+    @Test
+    public void getResponse_missingDateFields_returnsSpecificErrorsWithoutSaving() {
+        String[][] cases = {
+            {"deadline /by 2024-02-29", "The description of a deadline cannot be empty."},
+            {"deadline book", "A deadline needs '/by' followed by its due time."},
+            {"deadline book /by", "A deadline needs '/by' followed by its due time."},
+            {"event /from 2024-02-29 /to 2024-03-01", "The description of an event cannot be empty."},
+            {"event meeting /to 2024-03-01", "An event needs both '/from' and '/to' time markers."},
+            {"event meeting /from 2024-02-29", "An event needs both '/from' and '/to' time markers."},
+            {"event meeting /to 2024-03-01 /from 2024-02-29",
+                "An event needs both '/from' and '/to' time markers."},
+            {"event meeting /from /to 2024-03-01",
+                "An event needs non-empty times after both '/from' and '/to'."},
+            {"event meeting /from 2024-02-29 /to",
+                "An event needs non-empty times after both '/from' and '/to'."}
+        };
+        for (String[] testCase : cases) {
+            assertEquals(testCase[1], bot.getResponse(testCase[0]), testCase[0]);
+            assertEquals(CommandType.UNKNOWN, bot.getCommandType());
+            assertEquals("Your garden is clear. Enjoy the breathing room.", bot.getResponse("list"));
+            assertFalse(Files.exists(dataFile));
+        }
+    }
+
+    @Test
+    public void getResponse_invalidEventDates_preservesExistingTasks() throws IOException {
+        bot.getResponse("todo keep me");
+        String listing = bot.getResponse("list");
+        byte[] saved = Files.readAllBytes(dataFile);
+        for (String command : List.of("event meeting /from 2023-02-29 /to 2024-03-01",
+                "event meeting /from 2024-02-29 /to 2024-03-01 2400")) {
+            assertEquals("Please enter a valid date as yyyy-MM-dd or d/M/yyyy, "
+                    + "optionally followed by a time in HHmm format.", bot.getResponse(command));
+            assertEquals(CommandType.UNKNOWN, bot.getCommandType());
+            assertEquals(listing, bot.getResponse("list"));
+            assertArrayEquals(saved, Files.readAllBytes(dataFile));
+        }
+    }
+
+    @Test
+    public void getResponse_whitespaceAfterMarkers_acceptsDatesAndReportsCommandTypes() {
+        assertTrue(bot.getResponse("deadline book /by\t29/2/2024").contains("(by: Feb 29 2024)"));
+        assertEquals(CommandType.DEADLINE, bot.getCommandType());
+        assertTrue(bot.getResponse("event trip /from\t2024-02-29 /to\t2024-03-01")
+                .contains("(from: Feb 29 2024 to: Mar 1 2024)"));
+        assertEquals(CommandType.EVENT, bot.getCommandType());
+        bot.getResponse("mark   2");
+        assertEquals(CommandType.MARK, bot.getCommandType());
+        bot.getResponse("unmark   2");
+        assertEquals(CommandType.UNMARK, bot.getCommandType());
+        bot.getResponse("find trip");
+        assertEquals(CommandType.FIND, bot.getCommandType());
+        bot.getResponse("delete 2");
+        assertEquals(CommandType.DELETE, bot.getCommandType());
+        bot.getResponse("list");
+        assertEquals(CommandType.LIST, bot.getCommandType());
+    }
+
+    @Test
+    public void getResponse_repeatedMarkAndUnmark_persistsIdempotentState() {
+        bot.getResponse("todo first");
+        bot.getResponse("todo last");
+        for (String operation : List.of("mark", "unmark")) {
+            String firstResponse = bot.getResponse(operation + " 2");
+            assertEquals(firstResponse, bot.getResponse(operation + " 2"));
+            String listing = bot.getResponse("list");
+            assertTrue(listing.contains("1.[T][ ] first"));
+            assertTrue(listing.contains(operation.equals("mark") ? "2.[T][X] last" : "2.[T][ ] last"));
+            assertEquals(listing, new JassaBot(dataFile).getResponse("list"));
+        }
+    }
+
+    @Test
+    public void getResponse_deleteFirstAndLast_renumbersAndPersists() {
+        bot.getResponse("todo first");
+        bot.getResponse("todo middle");
+        bot.getResponse("todo last");
+        assertTrue(bot.getResponse("delete 1").contains("[T][ ] first"));
+        assertEquals("Removed this task. More room for what matters:\n  [T][ ] last\n"
+                + "Your garden now holds 1 task.", bot.getResponse("delete 2"));
+        String expected = "Here's what's growing in your task list:\n1.[T][ ] middle";
+        assertEquals(expected, bot.getResponse("list"));
+        assertEquals(expected, new JassaBot(dataFile).getResponse("list"));
+    }
+
+    @Test
+    public void getResponse_failedDeletionAtEveryPosition_restoresOrderAndAllowsRetry() throws IOException {
+        bot.getResponse("todo first");
+        bot.getResponse("todo middle");
+        bot.getResponse("todo last");
+        bot.getResponse("mark 2");
+        String listing = bot.getResponse("list");
+        Files.delete(dataFile);
+        Files.createDirectory(dataFile);
+        Path blocker = dataFile.resolve("blocker");
+        Files.writeString(blocker, "Keep this directory nonempty.");
+        for (int number = 1; number <= 3; number++) {
+            assertEquals("I couldn't save your tasks, so no changes were made.",
+                    bot.getResponse("delete " + number));
+            assertEquals(listing, bot.getResponse("list"));
+            assertEquals("Keep this directory nonempty.", Files.readString(blocker));
+        }
+        Files.delete(blocker);
+        Files.delete(dataFile);
+        assertTrue(bot.getResponse("delete 2").contains("[T][X] middle"));
+        assertEquals(bot.getResponse("list"), new JassaBot(dataFile).getResponse("list"));
+    }
+
+    @Test
+    public void getWelcome_repeatedCalls_doNotAccumulateResponsesOrChangeState() {
+        String welcome = "Hello, I'm JassaBot.\nLet's make room for a little progress today.\n"
+                + "Type help to see available commands.";
+        assertEquals(welcome, bot.getWelcome());
+        assertEquals(welcome, bot.getWelcome());
+        bot.getResponse("todo retained");
+        assertEquals(welcome, bot.getWelcome());
+        assertEquals("Here's what's growing in your task list:\n1.[T][ ] retained", bot.getResponse("list"));
+    }
 }
