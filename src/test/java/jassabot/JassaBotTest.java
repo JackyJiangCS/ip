@@ -75,7 +75,7 @@ public class JassaBotTest {
             assertFalse(bot.isExitRequested());
             assertFalse(Files.exists(directory.resolve("missing")));
         }
-        assertEquals("Here are the tasks in your list:", bot.getResponse("list"));
+        assertEquals("Your garden is clear. Enjoy the breathing room.", bot.getResponse("list"));
         assertTrue(bot.getResponse("todo after help").contains("[T][ ] after help"));
     }
 
@@ -91,7 +91,7 @@ public class JassaBotTest {
         assertArrayEquals(saved, Files.readAllBytes(dataFile));
         for (String command : List.of("HELP", "Help", "?", "/help", "--help", "helper",
                 "helpful", "help123", "help todo", "help unknown", "help\ttodo")) {
-            assertEquals("OOPS!!! I don't recognise that command. Type help to see available commands.",
+            assertEquals("I couldn't understand that command. Try help to see what you can do.",
                     bot.getResponse(command), command);
             assertEquals(CommandType.UNKNOWN, bot.getCommandType());
             assertFalse(bot.isExitRequested());
@@ -108,30 +108,51 @@ public class JassaBotTest {
         assertTrue(bot.getWelcome().contains("WARNING: The task data path is not a regular file."));
         assertEquals(HELP_RESPONSE, bot.getResponse("help"));
         assertEquals(CommandType.HELP, bot.getCommandType());
-        assertEquals("Here are the tasks in your list:", bot.getResponse("list"));
+        assertEquals("Your garden is clear. Enjoy the breathing room.", bot.getResponse("list"));
         assertTrue(Files.isDirectory(dataFile));
     }
 
     @Test
     public void getResponse_taskLifecycle_preservesStateAndSavesChanges() {
-        assertEquals("Got it. I've added this task:\n  [T][ ] read book\n"
-                + "Now you have 1 tasks in the list.", bot.getResponse("  todo read book  "));
+        assertEquals("Planted a new task:\n  [T][ ] read book\n"
+                + "Your garden now holds 1 task.", bot.getResponse("  todo read book  "));
         assertEquals(CommandType.TODO, bot.getCommandType());
-        assertEquals("Got it. I've added this task:\n  [D][ ] return book (by: Dec 2 2019, 6:00 PM)\n"
-                + "Now you have 2 tasks in the list.",
+        assertEquals("Planted a new task:\n  [D][ ] return book (by: Dec 2 2019, 6:00 PM)\n"
+                + "Your garden now holds 2 tasks.",
                 bot.getResponse("deadline return book /by 2019-12-02 1800"));
-        assertEquals("Got it. I've added this task:\n"
+        assertEquals("Planted a new task:\n"
                 + "  [E][ ] meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)\n"
-                + "Now you have 3 tasks in the list.",
+                + "Your garden now holds 3 tasks.",
                 bot.getResponse("event meeting /from 2019-12-02 1400 /to 2019-12-02 1600"));
-        assertTrue(bot.getResponse("mark 1").contains("[T][X] read book"));
-        assertTrue(bot.getResponse("unmark 1").contains("[T][ ] read book"));
-        assertEquals("Here are the matching tasks in your list:\n1.[T][ ] read book\n"
+        assertEquals("A little progress, a little growth. Task completed:\n  [T][X] read book",
+                bot.getResponse("mark 1"));
+        assertEquals("Room to grow. This task is marked as not done:\n  [T][ ] read book",
+                bot.getResponse("unmark 1"));
+        assertEquals("Here's what I found in your task garden:\n1.[T][ ] read book\n"
                 + "2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)", bot.getResponse("find BOOK"));
-        assertTrue(bot.getResponse("delete 2").contains("Now you have 2 tasks in the list."));
+        assertTrue(bot.getResponse("delete 2").contains("Your garden now holds 2 tasks."));
         String listing = bot.getResponse("list");
         assertTrue(listing.contains("2.[E][ ] meeting"));
         assertEquals(listing, new JassaBot(dataFile).getResponse("list"));
+    }
+
+    @Test
+    public void getResponse_emptyGardenAndSearch_preserveTasksAndReflectLastDeletion() throws IOException {
+        String emptyGarden = "Your garden is clear. Enjoy the breathing room.";
+        String noMatches = "No matching tasks this time. Try another keyword.";
+        assertEquals(emptyGarden, bot.getResponse("list"));
+        assertEquals(noMatches, bot.getResponse("find seedlings"));
+        assertFalse(Files.exists(dataFile));
+        bot.getResponse("todo water seedlings");
+        byte[] saved = Files.readAllBytes(dataFile);
+        assertEquals(noMatches, bot.getResponse("find book"));
+        assertArrayEquals(saved, Files.readAllBytes(dataFile));
+        assertEquals("Here's what's growing in your task list:\n1.[T][ ] water seedlings",
+                bot.getResponse("list"));
+        assertEquals("Removed this task. More room for what matters:\n  [T][ ] water seedlings\n"
+                + "Your garden now holds 0 tasks.", bot.getResponse("delete 1"));
+        assertEquals(emptyGarden, bot.getResponse("list"));
+        assertEquals(emptyGarden, new JassaBot(dataFile).getResponse("list"));
     }
 
     @Test
@@ -145,7 +166,7 @@ public class JassaBotTest {
             assertEquals(CommandType.UNKNOWN, bot.getCommandType(), command);
             assertEquals(listing, bot.getResponse("list"), command);
         }
-        assertEquals("OOPS!!! Please enter a command.", bot.getResponse(" "));
+        assertEquals("Please enter a command.", bot.getResponse(" "));
     }
 
     @Test
@@ -154,7 +175,7 @@ public class JassaBotTest {
                 .contains("[D][ ] compare /bypass (by: Dec 2 2019)"));
         assertTrue(bot.getResponse("event travel /fromage /together /from 2019-12-02 /to 2019-12-03")
                 .contains("[E][ ] travel /fromage /together"));
-        assertEquals("OOPS!!! A deadline needs '/by' followed by its due time.",
+        assertEquals("A deadline needs '/by' followed by its due time.",
                 bot.getResponse("deadline compare /bypass"));
     }
 
@@ -162,11 +183,11 @@ public class JassaBotTest {
     public void getWelcome_malformedStorage_reportsWarningsAndLoadsValidTasks() throws IOException {
         Files.writeString(dataFile, "T | 1 | saved task\nX | 0 | invalid\n");
         bot = new JassaBot(dataFile);
-        assertEquals("Hello! I'm JassaBot.\nWhat can I do for you?\n"
+        assertEquals("Hello, I'm JassaBot.\nLet's make room for a little progress today.\n"
                 + "Type help to see available commands.\n"
                 + "WARNING: Skipped data line 2: unknown task type 'X'.", bot.getWelcome());
         assertEquals(HELP_RESPONSE, bot.getResponse("help"));
-        assertEquals("Here are the tasks in your list:\n1.[T][X] saved task", bot.getResponse("list"));
+        assertEquals("Here's what's growing in your task list:\n1.[T][X] saved task", bot.getResponse("list"));
     }
 
     @Test
@@ -181,7 +202,7 @@ public class JassaBotTest {
         for (String command : List.of("todo rejected", "deadline rejected /by 2019-12-02",
                 "event rejected /from 2019-12-02 /to 2019-12-03", "mark 1", "mark 2",
                 "unmark 1", "unmark 2", "delete 1")) {
-            assertEquals("OOPS!!! I couldn't save your tasks, so no changes were made.",
+            assertEquals("I couldn't save your tasks, so no changes were made.",
                     bot.getResponse(command), command);
             assertEquals(CommandType.UNKNOWN, bot.getCommandType());
             assertEquals(listing, bot.getResponse("list"), command);
@@ -193,11 +214,11 @@ public class JassaBotTest {
         bot.getResponse("todo saved before exit");
         String saved = Files.readString(dataFile);
         assertFalse(bot.isExitRequested());
-        assertEquals("Bye. Hope to see you again soon!", bot.getResponse("  bye  "));
+        assertEquals("Bye for now. Take your time, and keep growing.", bot.getResponse("  bye  "));
         assertEquals(CommandType.BYE, bot.getCommandType());
         assertTrue(bot.isExitRequested());
-        assertEquals("Bye. Hope to see you again soon!", bot.getResponse("todo too late"));
-        assertEquals("Bye. Hope to see you again soon!", bot.getResponse("help"));
+        assertEquals("Bye for now. Take your time, and keep growing.", bot.getResponse("todo too late"));
+        assertEquals("Bye for now. Take your time, and keep growing.", bot.getResponse("help"));
         assertEquals(CommandType.UNKNOWN, bot.getCommandType());
         assertTrue(bot.isExitRequested());
         assertEquals(saved, Files.readString(dataFile));

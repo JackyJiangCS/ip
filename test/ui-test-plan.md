@@ -38,8 +38,8 @@ ____________________________________________________________
   | |/ _` / __/ __|/ _` |   |  _ \ / _ \| __|
   | | (_| \__ \__ \ (_| |   | |_) | (_) | |_
  _|_|\__,_|___/___/\__,_|   |____/ \___/ \__|
-Hello! I'm JassaBot.
-What can I do for you?
+Hello, I'm JassaBot.
+Let's make room for a little progress today.
 Type help to see available commands.
 ____________________________________________________________
 ```
@@ -64,7 +64,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -84,9 +84,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] read book
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -100,9 +100,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [D][ ] return book (by: Dec 2 2019, 6:00 PM)
-   Now you have 2 tasks in the list.
+   Your garden now holds 2 tasks.
    ____________________________________________________________
    ```
 
@@ -116,9 +116,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
-   Now you have 3 tasks in the list.
+   Your garden now holds 3 tasks.
    ____________________________________________________________
    ```
 
@@ -132,7 +132,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][ ] read book
    2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
    3.[E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
@@ -149,7 +149,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -169,9 +169,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] read book
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -185,7 +185,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Nice! I've marked this task as done:
+   A little progress, a little growth. Task completed:
      [T][X] read book
    ____________________________________________________________
    ```
@@ -200,7 +200,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OK, I've marked this task as not done yet:
+   Room to grow. This task is marked as not done:
      [T][ ] read book
    ____________________________________________________________
    ```
@@ -215,7 +215,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][ ] read book
    ____________________________________________________________
    ```
@@ -230,7 +230,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -264,7 +264,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -284,7 +284,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! A deadline needs '/by' followed by its due time.
+   A deadline needs '/by' followed by its due time.
    ____________________________________________________________
    ```
 
@@ -298,7 +298,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! An event needs both '/from' and '/to' time markers.
+   An event needs both '/from' and '/to' time markers.
    ____________________________________________________________
    ```
 
@@ -312,7 +312,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Your garden is clear. Enjoy the breathing room.
    ____________________________________________________________
    ```
 
@@ -326,7 +326,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -346,9 +346,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] read book
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -362,7 +362,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! The description of a todo cannot be empty.
+   The description of a todo cannot be empty.
    ____________________________________________________________
    ```
 
@@ -376,7 +376,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][ ] read book
    ____________________________________________________________
    ```
@@ -391,9 +391,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [D][ ] return book (by: Dec 2 2019, 6:00 PM)
-   Now you have 2 tasks in the list.
+   Your garden now holds 2 tasks.
    ____________________________________________________________
    ```
 
@@ -407,7 +407,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! The description of a deadline cannot be empty.
+   The description of a deadline cannot be empty.
    ____________________________________________________________
    ```
 
@@ -421,9 +421,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
-   Now you have 3 tasks in the list.
+   Your garden now holds 3 tasks.
    ____________________________________________________________
    ```
 
@@ -437,7 +437,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! The description of an event cannot be empty.
+   The description of an event cannot be empty.
    ____________________________________________________________
    ```
 
@@ -451,7 +451,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -465,7 +465,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][ ] read book
    2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
    3.[E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
@@ -482,7 +482,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -502,9 +502,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] read book
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -518,9 +518,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [D][ ] return book (by: Dec 2 2019, 6:00 PM)
-   Now you have 2 tasks in the list.
+   Your garden now holds 2 tasks.
    ____________________________________________________________
    ```
 
@@ -534,9 +534,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [E][ ] project meeting (from: Aug 6 2019, 2:00 PM to: Aug 6 2019, 4:00 PM)
-   Now you have 3 tasks in the list.
+   Your garden now holds 3 tasks.
    ____________________________________________________________
    ```
 
@@ -550,9 +550,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] exercise
-   Now you have 4 tasks in the list.
+   Your garden now holds 4 tasks.
    ____________________________________________________________
    ```
 
@@ -566,9 +566,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] sleep
-   Now you have 5 tasks in the list.
+   Your garden now holds 5 tasks.
    ____________________________________________________________
    ```
 
@@ -582,9 +582,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Noted. I've removed this task:
+   Removed this task. More room for what matters:
      [E][ ] project meeting (from: Aug 6 2019, 2:00 PM to: Aug 6 2019, 4:00 PM)
-   Now you have 4 tasks in the list.
+   Your garden now holds 4 tasks.
    ____________________________________________________________
    ```
 
@@ -612,7 +612,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][ ] read book
    2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
    3.[T][ ] exercise
@@ -630,7 +630,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -650,9 +650,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] Read Book
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -666,9 +666,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [D][ ] return book (by: Dec 2 2019, 6:00 PM)
-   Now you have 2 tasks in the list.
+   Your garden now holds 2 tasks.
    ____________________________________________________________
    ```
 
@@ -682,9 +682,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] exercise
-   Now you have 3 tasks in the list.
+   Your garden now holds 3 tasks.
    ____________________________________________________________
    ```
 
@@ -698,7 +698,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Nice! I've marked this task as done:
+   A little progress, a little growth. Task completed:
      [T][X] Read Book
    ____________________________________________________________
    ```
@@ -713,7 +713,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Here are the matching tasks in your list:
+   Here's what I found in your task garden:
    1.[T][X] Read Book
    2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
    ____________________________________________________________
@@ -729,7 +729,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Here are the matching tasks in your list:
+   No matching tasks this time. Try another keyword.
    ____________________________________________________________
    ```
 
@@ -743,7 +743,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OOPS!!! Please enter a keyword to find.
+   Please enter a keyword to find.
    ____________________________________________________________
    ```
 
@@ -757,7 +757,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -777,9 +777,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] read book
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -799,9 +799,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [D][ ] return book (by: Dec 2 2019, 6:00 PM)
-   Now you have 2 tasks in the list.
+   Your garden now holds 2 tasks.
    ____________________________________________________________
    ```
 
@@ -822,9 +822,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
-   Now you have 3 tasks in the list.
+   Your garden now holds 3 tasks.
    ____________________________________________________________
    ```
 
@@ -846,7 +846,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Nice! I've marked this task as done:
+   A little progress, a little growth. Task completed:
      [T][X] read book
    ____________________________________________________________
    ```
@@ -869,7 +869,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   OK, I've marked this task as not done yet:
+   Room to grow. This task is marked as not done:
      [T][ ] read book
    ____________________________________________________________
    ```
@@ -892,9 +892,9 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Noted. I've removed this task:
+   Removed this task. More room for what matters:
      [D][ ] return book (by: Dec 2 2019, 6:00 PM)
-   Now you have 2 tasks in the list.
+   Your garden now holds 2 tasks.
    ____________________________________________________________
    ```
 
@@ -915,7 +915,7 @@ Each case below is one fresh console session. After sending an input, compare th
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -943,7 +943,7 @@ E | 1 | project meeting | 2019-12-02T14:00 | 2019-12-02T16:00
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][X] read book
    2.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
    3.[E][X] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
@@ -960,7 +960,7 @@ E | 1 | project meeting | 2019-12-02T14:00 | 2019-12-02T16:00
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -986,7 +986,7 @@ T | 0 | compare A \| B \\ C
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][ ] compare A | B \ C
    ____________________________________________________________
    ```
@@ -1001,9 +1001,9 @@ T | 0 | compare A \| B \\ C
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] save X | Y \ Z
-   Now you have 2 tasks in the list.
+   Your garden now holds 2 tasks.
    ____________________________________________________________
    ```
 
@@ -1024,7 +1024,7 @@ T | 0 | compare A \| B \\ C
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -1072,7 +1072,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][X] valid todo
    2.[E][X] valid meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
    ____________________________________________________________
@@ -1088,7 +1088,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -1118,7 +1118,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I couldn't save your tasks, so no changes were made.
+   I couldn't save your tasks, so no changes were made.
    ____________________________________________________________
    ```
 
@@ -1132,7 +1132,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Your garden is clear. Enjoy the breathing room.
    ____________________________________________________________
    ```
 
@@ -1146,7 +1146,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -1167,7 +1167,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! Please enter a command.
+   Please enter a command.
    ____________________________________________________________
    ```
 
@@ -1237,7 +1237,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! A deadline needs '/by' followed by its due time.
+   A deadline needs '/by' followed by its due time.
    ____________________________________________________________
    ```
 
@@ -1251,7 +1251,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! An event needs non-empty times after both '/from' and '/to'.
+   An event needs non-empty times after both '/from' and '/to'.
    ____________________________________________________________
    ```
 
@@ -1265,7 +1265,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! An event needs non-empty times after both '/from' and '/to'.
+   An event needs non-empty times after both '/from' and '/to'.
    ____________________________________________________________
    ```
 
@@ -1279,9 +1279,9 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] spaced task
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -1295,7 +1295,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][ ] spaced task
    ____________________________________________________________
    ```
@@ -1310,7 +1310,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -1331,7 +1331,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Input closed. Goodbye!
+   Input closed. Take care, and keep growing.
    ____________________________________________________________
    ```
 
@@ -1354,9 +1354,9 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] first-run task
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -1376,7 +1376,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -1396,9 +1396,9 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [D][ ] return book (by: Dec 2 2019, 6:00 PM)
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -1412,9 +1412,9 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
-   Now you have 2 tasks in the list.
+   Your garden now holds 2 tasks.
    ____________________________________________________________
    ```
 
@@ -1428,9 +1428,9 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [D][ ] date only (by: Oct 15 2019)
-   Now you have 3 tasks in the list.
+   Your garden now holds 3 tasks.
    ____________________________________________________________
    ```
 
@@ -1444,7 +1444,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! Please enter a valid date as yyyy-MM-dd or d/M/yyyy, optionally followed by a time in HHmm format.
+   Please enter a valid date as yyyy-MM-dd or d/M/yyyy, optionally followed by a time in HHmm format.
    ____________________________________________________________
    ```
 
@@ -1458,7 +1458,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[D][ ] return book (by: Dec 2 2019, 6:00 PM)
    2.[E][ ] project meeting (from: Dec 2 2019, 2:00 PM to: Dec 2 2019, 4:00 PM)
    3.[D][ ] date only (by: Oct 15 2019)
@@ -1475,7 +1475,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -1527,9 +1527,9 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Got it. I've added this task:
+   Planted a new task:
      [T][ ] keep me
-   Now you have 1 tasks in the list.
+   Your garden now holds 1 task.
    ____________________________________________________________
    ```
 
@@ -1587,7 +1587,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Here are the tasks in your list:
+   Here's what's growing in your task list:
    1.[T][ ] keep me
    ____________________________________________________________
    ```
@@ -1602,7 +1602,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
 
@@ -1623,7 +1623,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -1637,7 +1637,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -1651,7 +1651,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -1665,7 +1665,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -1679,7 +1679,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -1693,7 +1693,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -1707,7 +1707,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -1721,7 +1721,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -1735,7 +1735,7 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   OOPS!!! I don't recognise that command. Type help to see available commands.
+   I couldn't understand that command. Try help to see what you can do.
    ____________________________________________________________
    ```
 
@@ -1781,6 +1781,130 @@ ____________________________________________________________
 
    ```text
    ____________________________________________________________
-   Bye. Hope to see you again soon!
+   Bye for now. Take your time, and keep growing.
+   ____________________________________________________________
+   ```
+
+
+### TC-20 - Tend an empty garden and remove the last task
+
+**Aim:** Verify the empty-list and empty-search responses, singular task count, and zero count after deleting the last task.
+
+**Inputs and expected output:**
+
+1. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Your garden is clear. Enjoy the breathing room.
+   ____________________________________________________________
+   ```
+
+2. Input:
+
+   ```text
+   find seedlings
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   No matching tasks this time. Try another keyword.
+   ____________________________________________________________
+   ```
+
+3. Input:
+
+   ```text
+   todo water seedlings
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Planted a new task:
+     [T][ ] water seedlings
+   Your garden now holds 1 task.
+   ____________________________________________________________
+   ```
+
+4. Input:
+
+   ```text
+   find book
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   No matching tasks this time. Try another keyword.
+   ____________________________________________________________
+   ```
+
+5. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Here's what's growing in your task list:
+   1.[T][ ] water seedlings
+   ____________________________________________________________
+   ```
+
+6. Input:
+
+   ```text
+   delete 1
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Removed this task. More room for what matters:
+     [T][ ] water seedlings
+   Your garden now holds 0 tasks.
+   ____________________________________________________________
+   ```
+
+7. Input:
+
+   ```text
+   list
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Your garden is clear. Enjoy the breathing room.
+   ____________________________________________________________
+   ```
+
+8. Input:
+
+   ```text
+   bye
+   ```
+
+   Expected output:
+
+   ```text
+   ____________________________________________________________
+   Bye for now. Take your time, and keep growing.
    ____________________________________________________________
    ```
