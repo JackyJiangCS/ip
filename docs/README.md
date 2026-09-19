@@ -8,8 +8,8 @@ Add what you need to do, find it later, and mark it done as you make progress.
 ## Quick start
 
 1. Install **Java 25** and check that `java -version` reports version 25.
-2. Obtain `jassabot.jar` (see the [project setup instructions](../README.md#running-the-gui-or-console)
-   to build it), and place it in a folder where you want to keep your tasks.
+2. Download `jassabot.jar` from the [latest release](https://github.com/JackyJiangCS/ip/releases/latest).
+   Choose the `.jar` file under **Assets** and place it in a folder where you want to keep your tasks.
 3. Open a terminal in that folder and run:
 
    ```sh
